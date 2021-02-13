@@ -1,0 +1,53 @@
+.mutual-fund {
+    margin-left: 0;
+    /* padding-bottom: 20px; */
+    font-size: 10px;
+}
+
+.search-mf-form input{
+    margin-right: 0;
+}
+
+.search-mf-form button{
+    margin-left: 0;
+}
+
+.mutual-fund h6{
+    font-size: 12px;
+}
+
+.mutual-fund-header{
+    display: flex;
+}
+
+.mutual-fund-header button{
+    border: none;
+    outline: none;
+    background-color: #ffffff;
+}
+
+.mf-result{
+    display: flex;
+}
+
+.mf-result button{
+    border: none;
+    outline: none;
+    background-color: #ffffff;
+}
+
+.container{
+    display: flex;
+}
+
+.container-grid{
+    padding: 20px;
+}
+
+.statistics{
+    display: flex;
+}
+
+.statistics-grid{
+    padding-right: 10px;
+}
