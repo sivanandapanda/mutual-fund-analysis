@@ -1,20 +1,34 @@
 package com.example.web.service;
 
+import com.example.common.model.MutualFundStatistics;
 import com.example.common.model.SearchableMutualFund;
 import com.example.web.model.Dashboard;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.jboss.logging.Logger;
 
+import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class MutualFundWebService {
 
     @Inject
+    Logger log;
+
+    @Inject
     @RestClient
     MutualFundServiceApiWebClient webClient;
+
+    private final ExecutorService executorService = Executors.newFixedThreadPool(1000);
 
     public List<Dashboard> getDashBoardFrom(List<Long> schemeCodes) {
         return schemeCodes.stream()
@@ -29,16 +43,29 @@ public class MutualFundWebService {
     }
 
     public List<Dashboard> exploreMutualFunds(String schemeName, int sampleSize) {
-
-
-
-        return webClient.searchMutualFunds(schemeName, sampleSize)
-                //.stream()
+        List<Future<MutualFundStatistics>> futures = webClient.searchMutualFunds(schemeName, sampleSize)
                 .parallelStream()
-                .map(searchableMutualFund -> webClient.getMfData(searchableMutualFund.getSchemeCode()))
-                .map(Dashboard::new)
+                .map(searchableMutualFund -> executorService.submit(() -> webClient.getMfData(searchableMutualFund.getSchemeCode())))
+                .collect(Collectors.toList());
+
+        return futures.parallelStream()
+                .map(f -> {
+                    try {
+                        return new Dashboard(f.get());
+                    } catch (InterruptedException | ExecutionException e) {
+                        log.error("Exception occurred while retrieving result from future", e);
+                    }
+                    return null;
+                })
+                .filter(Objects::nonNull)
                 .sorted((d1, d2) -> d2.getMutualFundStatistics().getPercentageIncrease().compareTo(d1.getMutualFundStatistics().getPercentageIncrease()))
                 .limit(100)
+                .sorted(Comparator.comparing(d -> d.getMutualFundStatistics().getPercentageIncrease()))
                 .collect(Collectors.toList());
+    }
+
+    @PreDestroy
+    public void destroy() {
+        executorService.shutdownNow();
     }
 }
