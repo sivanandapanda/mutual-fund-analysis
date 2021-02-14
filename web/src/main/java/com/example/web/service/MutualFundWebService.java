@@ -3,9 +3,11 @@ package com.example.web.service;
 import com.example.common.model.MutualFundStatistics;
 import com.example.common.model.SearchableMutualFund;
 import com.example.web.model.Dashboard;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -28,7 +30,15 @@ public class MutualFundWebService {
     @RestClient
     MutualFundServiceApiWebClient webClient;
 
-    private final ExecutorService executorService = Executors.newFixedThreadPool(1000);
+    @ConfigProperty(name = "web.threadPool.size")
+    int threadPoolSize;
+
+    private ExecutorService executorService;
+
+    @PostConstruct
+    public void init() {
+        executorService = Executors.newFixedThreadPool(threadPoolSize);
+    }
 
     public List<Dashboard> getDashBoardFrom(List<Long> schemeCodes) {
         return schemeCodes.stream()
@@ -66,6 +76,8 @@ public class MutualFundWebService {
 
     @PreDestroy
     public void destroy() {
-        executorService.shutdownNow();
+        if(Objects.nonNull(executorService)) {
+            executorService.shutdownNow();
+        }
     }
 }

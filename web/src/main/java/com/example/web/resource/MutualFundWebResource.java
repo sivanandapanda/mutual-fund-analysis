@@ -5,6 +5,7 @@ import com.example.web.model.Dashboard;
 import com.example.web.service.MutualFundWebService;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
+import org.jboss.resteasy.annotations.GZIP;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -39,6 +40,7 @@ public class MutualFundWebResource {
     }
 
     @GET
+    @GZIP
     @Path("mutualfund/explore")
     @Counted(name = "getMutualFund")
     @Timed(name = "exploreMutualFundsTimer")
