@@ -8,8 +8,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>common</module>
         <module>api</module>
+        <module>common</module>
+        <module>worker</module>
         <module>web</module>
     </modules>
 
