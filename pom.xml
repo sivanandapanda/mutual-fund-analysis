@@ -7,6 +7,10 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <properties>
+        <quarkus.version>1.13.4.Final</quarkus.version>
+    </properties>
+
     <modules>
         <module>api</module>
         <module>common</module>

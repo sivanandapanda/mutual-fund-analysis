@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+option java_outer_classname = "Models";
+
+package com.example.mutualfund.grpc;
+
+message Empty {}
+
+message MutualFundMeta {
+  string fundHouse = 1;
+  string schemeType = 2;
+  string schemeCategory = 3;
+  int64 schemeCode = 4;
+  string schemeName = 5;
+}
+
+message MutualFundMetaList {
+  repeated MutualFundMeta metaList = 1;
+}
+
+message SchemeCodeRequest {
+  int64 schemeCode = 1;
+}
+
+message NavPerDate {
+  int64 schemeCode = 1;
+  string date = 2;
+  double nav = 3;
+}
+
+message MutualFund {
+  MutualFundMeta meta = 1;
+  repeated NavPerDate navPerDates = 2;
+}
+
+message NavStatistics {
+  int64 days = 1;
+  string date = 2;
+  double nav = 3;
+
+  enum TenorEnum {
+      ONED = 0;
+      THREED = 1;
+      ONEW = 2;
+      TWOW = 3;
+      ONEM = 4;
+      TWOM = 5;
+      SIXM = 6;
+      ONEY = 7;
+      TWOY = 8;
+      FIVEY = 9;
+      INCEPTIO = 10;
+  }
+  TenorEnum tenor = 4;
+
+  enum Move {
+      UP = 0;
+      DOWN = 1;
+      NO_CHANGE = 2;
+  }
+  Move move =5;
+}
+
+message MutualFundStatistics {
+  MutualFundMeta meta = 1;
+  repeated NavStatistics statistics = 2;
+  double percentageIncrease = 3;
+}
+
+message MutualFundSearchResult {
+  int64 schemeCode = 1;
+  string schemeName = 2;
+}
+
+message MutualFundSearchResults {
+  repeated MutualFundSearchResult searchResults = 1;
+}
+
+message SearchRequest {
+  string searchString = 1;
+  int32 page = 2;
+  int32 size = 3;
+}
