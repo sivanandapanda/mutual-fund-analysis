@@ -8,7 +8,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <quarkus.version>1.13.4.Final</quarkus.version>
+        <quarkus.version>1.13.6.Final</quarkus.version>
     </properties>
 
     <modules>

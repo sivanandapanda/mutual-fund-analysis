@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+option java_multiple_files = true;
 option java_outer_classname = "Models";
 
 package com.example.mutualfund.grpc;
@@ -14,9 +15,9 @@ message MutualFundMeta {
   string schemeName = 5;
 }
 
-message MutualFundMetaList {
+/*message MutualFundMetaList {
   repeated MutualFundMeta metaList = 1;
-}
+}*/
 
 message SchemeCodeRequest {
   int64 schemeCode = 1;
@@ -72,9 +73,9 @@ message MutualFundSearchResult {
   string schemeName = 2;
 }
 
-message MutualFundSearchResults {
+/*message MutualFundSearchResults {
   repeated MutualFundSearchResult searchResults = 1;
-}
+}*/
 
 message SearchRequest {
   string searchString = 1;

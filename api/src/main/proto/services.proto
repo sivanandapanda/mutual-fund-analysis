@@ -2,16 +2,17 @@ syntax = "proto3";
 
 import "models.proto";
 
+option java_multiple_files = true;
 option java_outer_classname = "Services";
 
 package com.example.mutualfund.grpc;
 
 service MutualFundService {
-  rpc getAllMutualFunds(Empty) returns (MutualFundMetaList) {}
+  rpc getAllMutualFunds(Empty) returns (stream MutualFundMeta) {}
   rpc getMutualFund(SchemeCodeRequest) returns (MutualFund) {}
   rpc getMutualFundStatistics(SchemeCodeRequest) returns (MutualFundStatistics) {}
 }
 
 service MutualFundSearchService {
-  rpc searchForMutualFund(SearchRequest) returns (MutualFundSearchResults) {}
+  rpc searchForMutualFund(SearchRequest) returns (stream MutualFundSearchResult) {}
 }

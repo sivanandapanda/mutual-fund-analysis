@@ -10,7 +10,6 @@ import io.vertx.redis.client.Response;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
 import static api.service.LocalSearchService.SEARCHABLE_MF_NAME_LIST_CACHE_KEY;
 import static java.util.Objects.nonNull;
 
-@ApplicationScoped
+//@ApplicationScoped
 public class MutualFundService {
 
     @Inject
