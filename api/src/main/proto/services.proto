@@ -8,9 +8,9 @@ option java_outer_classname = "Services";
 package com.example.mutualfund.grpc;
 
 service MutualFundService {
-  rpc getAllMutualFunds(Empty) returns (stream MutualFundMeta) {}
-  rpc getMutualFund(SchemeCodeRequest) returns (MutualFund) {}
-  rpc getMutualFundStatistics(SchemeCodeRequest) returns (MutualFundStatistics) {}
+  rpc getAllMutualFunds(Empty) returns (stream MutualFundMetaGrpc) {}
+  rpc getMutualFund(SchemeCodeRequest) returns (MutualFundGrpc) {}
+  rpc getMutualFundStatistics(SchemeCodeRequest) returns (MutualFundStatisticsGrpc) {}
 }
 
 service MutualFundSearchService {

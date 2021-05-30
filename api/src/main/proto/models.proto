@@ -7,7 +7,7 @@ package com.example.mutualfund.grpc;
 
 message Empty {}
 
-message MutualFundMeta {
+message MutualFundMetaGrpc {
   string fundHouse = 1;
   string schemeType = 2;
   string schemeCategory = 3;
@@ -15,26 +15,22 @@ message MutualFundMeta {
   string schemeName = 5;
 }
 
-/*message MutualFundMetaList {
-  repeated MutualFundMeta metaList = 1;
-}*/
-
 message SchemeCodeRequest {
   int64 schemeCode = 1;
 }
 
-message NavPerDate {
+message NavPerDateGrpc {
   int64 schemeCode = 1;
   string date = 2;
   double nav = 3;
 }
 
-message MutualFund {
-  MutualFundMeta meta = 1;
-  repeated NavPerDate navPerDates = 2;
+message MutualFundGrpc {
+  MutualFundMetaGrpc meta = 1;
+  repeated NavPerDateGrpc navPerDates = 2;
 }
 
-message NavStatistics {
+message NavStatisticsGrpc {
   int64 days = 1;
   string date = 2;
   double nav = 3;
@@ -62,9 +58,9 @@ message NavStatistics {
   Move move =5;
 }
 
-message MutualFundStatistics {
-  MutualFundMeta meta = 1;
-  repeated NavStatistics statistics = 2;
+message MutualFundStatisticsGrpc {
+  MutualFundMetaGrpc meta = 1;
+  repeated NavStatisticsGrpc statistics = 2;
   double percentageIncrease = 3;
 }
 
@@ -72,10 +68,6 @@ message MutualFundSearchResult {
   int64 schemeCode = 1;
   string schemeName = 2;
 }
-
-/*message MutualFundSearchResults {
-  repeated MutualFundSearchResult searchResults = 1;
-}*/
 
 message SearchRequest {
   string searchString = 1;
