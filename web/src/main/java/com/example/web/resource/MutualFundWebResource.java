@@ -2,7 +2,7 @@ package com.example.web.resource;
 
 import com.example.common.model.SearchableMutualFund;
 import com.example.web.model.Dashboard;
-import com.example.web.service.MutualFundWebService;
+import com.example.web.service.MutualFundGrpcService;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
 import org.jboss.resteasy.annotations.GZIP;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class MutualFundWebResource {
 
     @Inject
-    MutualFundWebService service;
+    MutualFundGrpcService service;
 
     @GET
     @Path("dashboard/create")

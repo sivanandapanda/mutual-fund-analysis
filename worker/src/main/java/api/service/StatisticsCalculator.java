@@ -29,15 +29,15 @@ public class StatisticsCalculator {
                 .sorted(Comparator.comparing(NavPerDate::getDate).reversed())
                 .collect(Collectors.toList());
 
-        Statistics statistics = new Statistics(
-                        Stream.of(getXDayNav(sortedNavList, sortedNavList.size(), -1, INCEPTION),
-                                getXDayNav(sortedNavList, 1305, 1566, FIVEY), getXDayNav(sortedNavList, 528, 794, TWOY),
-                                getXDayNav(sortedNavList, 264, 528, ONEY), getXDayNav(sortedNavList, 132, 264, SIXM),
-                                getXDayNav(sortedNavList, 44, 132, TWOM), getXDayNav(sortedNavList, 22, 44, ONEM),
-                                getXDayNav(sortedNavList, 10, 22, TWOW), getXDayNav(sortedNavList, 5, 10, ONEW),
-                                getXDayNav(sortedNavList, 3, 7, THREED), getXDayNav(sortedNavList, 0, 3, ONED))
-                                .filter(Objects::nonNull)
-                                .collect(Collectors.toList()));
+
+        var statistics = Stream.of(getXDayNav(sortedNavList, sortedNavList.size(), -1, INCEPTION),
+                getXDayNav(sortedNavList, 1305, 1566, FIVEY), getXDayNav(sortedNavList, 528, 794, TWOY),
+                getXDayNav(sortedNavList, 264, 528, ONEY), getXDayNav(sortedNavList, 132, 264, SIXM),
+                getXDayNav(sortedNavList, 44, 132, TWOM), getXDayNav(sortedNavList, 22, 44, ONEM),
+                getXDayNav(sortedNavList, 10, 22, TWOW), getXDayNav(sortedNavList, 5, 10, ONEW),
+                getXDayNav(sortedNavList, 3, 7, THREED), getXDayNav(sortedNavList, 0, 3, ONED))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
 
         return new MutualFundStatistics(mutualFund.getMeta(), statistics, navChangeIn5Years(statistics, mutualFund.getMeta().getSchemeName()));
     }
@@ -66,13 +66,13 @@ public class StatisticsCalculator {
         return new NavStatistics(point, navOnDate.getDate(), navOnDate.getNav(), tenor, move);
     }
 
-    private double navChangeIn5Years(Statistics statistics, String schemeName) {
+    private double navChangeIn5Years(List<NavStatistics> statistics, String schemeName) {
         double percentageIncrease = 0d;
         try {
             if (Objects.nonNull(statistics)) {
 
-                Optional<NavStatistics> fiveY = statistics.getStatisticsList().stream().filter(s -> s.getTenor() == TenorEnum.FIVEY).findAny();
-                Optional<NavStatistics> oneD = statistics.getStatisticsList().stream()
+                Optional<NavStatistics> fiveY = statistics.stream().filter(s -> s.getTenor() == TenorEnum.FIVEY).findAny();
+                Optional<NavStatistics> oneD = statistics.stream()
                         .filter(s -> s.getDate().isAfter(LocalDate.now().minusDays(30)) && s.getTenor() == TenorEnum.ONED).findAny();
 
                 if (oneD.isPresent()) {
@@ -80,7 +80,7 @@ public class StatisticsCalculator {
                         BigDecimal increase = oneD.get().getNav().subtract(fiveY.get().getNav());
                         percentageIncrease = increase.divide(fiveY.get().getNav(), 2, RoundingMode.DOWN).multiply(new BigDecimal("100")).doubleValue();
                     } else {
-                        Optional<NavStatistics> inception = statistics.getStatisticsList().stream().filter(s -> s.getTenor() == INCEPTION).findAny();
+                        Optional<NavStatistics> inception = statistics.stream().filter(s -> s.getTenor() == INCEPTION).findAny();
 
                         if (inception.isPresent() && inception.get().getNav().doubleValue() != 0d) {
                             BigDecimal increase = oneD.get().getNav().subtract(inception.get().getNav());

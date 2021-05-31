@@ -48,6 +48,7 @@ public class MutualFundSearchGrpcService extends MutinyMutualFundSearchServiceGr
                 .map(s -> MutualFundSearchResult.newBuilder()
                         .setSchemeCode(s.getSchemeCode())
                         .setSchemeName(s.getSchemeName())
+                        .setSearchScore(s.getSearchScore())
                         .build())
                 .collect(Collectors.toList());
 

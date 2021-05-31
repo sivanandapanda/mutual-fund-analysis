@@ -67,6 +67,7 @@ message MutualFundStatisticsGrpc {
 message MutualFundSearchResult {
   int64 schemeCode = 1;
   string schemeName = 2;
+  int64 searchScore = 3;
 }
 
 message SearchRequest {

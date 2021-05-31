@@ -87,7 +87,7 @@ public class MutualFundGrpcService extends MutinyMutualFundServiceGrpc.MutualFun
                             .setSchemeCode(request.getSchemeCode())
                             .build();
 
-                    var navStatistics = mutualFundStatistics.getStatistics().getStatisticsList().stream()
+                    var navStatistics = mutualFundStatistics.getStatistics().stream()
                             .map(s -> NavStatisticsGrpc.newBuilder()
                                     .setDate(s.getDate().format(DateTimeFormatter.BASIC_ISO_DATE))
                                     .setDays(s.getDays())

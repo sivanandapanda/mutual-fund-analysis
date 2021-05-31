@@ -8,6 +8,13 @@ public class MutualFund implements Serializable {
     private MutualFundMeta meta;
     private List<NavPerDate> navPerDates;
 
+    public MutualFund(MutualFundMeta meta, List<NavPerDate> navPerDates) {
+        this.meta = meta;
+        this.navPerDates = navPerDates;
+    }
+
+    public MutualFund() {}
+
     public MutualFundMeta getMeta() {
         return meta;
     }

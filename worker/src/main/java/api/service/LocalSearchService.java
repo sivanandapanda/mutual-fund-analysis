@@ -128,10 +128,13 @@ public class LocalSearchService {
             scoreMap.put(tagList.get(i), 10000L + (tagList.size() - i) * 100L);
         }
 
-        return scoreMap.entrySet().stream().parallel()
+        var score = scoreMap.entrySet().stream().parallel()
                 .filter(e -> mutualFund.getSchemeName().toLowerCase().contains(e.getKey()))
                 .map(Map.Entry::getValue)
                 .reduce(0L, Long::sum);
+        mutualFund.setSearchScore(score);
+
+        return score;
     }
 
     public synchronized long count() {
