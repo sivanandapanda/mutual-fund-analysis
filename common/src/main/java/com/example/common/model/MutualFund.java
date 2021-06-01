@@ -1,7 +1,10 @@
 package com.example.common.model;
 
+import com.example.mutualfund.grpc.MutualFundGrpc;
+
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MutualFund implements Serializable {
 
@@ -39,5 +42,12 @@ public class MutualFund implements Serializable {
                 ", meta=" + meta +
                 ", navPerDates=" + navPerDates +
                 '}';
+    }
+
+    public MutualFundGrpc convertToGrpcModel() {
+        return MutualFundGrpc.newBuilder()
+                .setMeta(this.getMeta().convertToGrpcModel())
+                .addAllNavPerDates(this.getNavPerDates().stream().map(NavPerDate::convertToGrpcModel).collect(Collectors.toList()))
+                .build();
     }
 }

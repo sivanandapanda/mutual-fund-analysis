@@ -1,14 +1,16 @@
 package com.example.common.model;
 
+import com.example.mutualfund.grpc.MutualFundSearchResultGrpc;
+
 import java.io.Serializable;
 import java.util.Objects;
 
 public class SearchableMutualFund implements Serializable {
     private Long schemeCode;
     private String schemeName;
-    private Long searchScore;
+    private Double searchScore;
 
-    public SearchableMutualFund(Long schemeCode, String schemeName, Long searchScore) {
+    public SearchableMutualFund(Long schemeCode, String schemeName, Double searchScore) {
         this.schemeCode = schemeCode;
         this.schemeName = schemeName;
         this.searchScore = searchScore;
@@ -24,11 +26,11 @@ public class SearchableMutualFund implements Serializable {
         return schemeName;
     }
 
-    public Long getSearchScore() {
-        return searchScore;
+    public Double getSearchScore() {
+        return searchScore == null ? 0 : searchScore;
     }
 
-    public void setSearchScore(Long searchScore) {
+    public void setSearchScore(Double searchScore) {
         this.searchScore = searchScore;
     }
 
@@ -44,5 +46,12 @@ public class SearchableMutualFund implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(schemeCode, schemeName, searchScore);
+    }
+
+    public MutualFundSearchResultGrpc convertToGrpcModel() {
+        return MutualFundSearchResultGrpc.newBuilder()
+                .setSchemeCode(this.getSchemeCode())
+                .setSchemeName(this.getSchemeName())
+                .build();
     }
 }

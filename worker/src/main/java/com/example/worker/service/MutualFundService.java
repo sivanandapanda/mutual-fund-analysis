@@ -1,16 +1,16 @@
-package api.service;
+package com.example.worker.service;
 
-import api.model.MfApiResponse;
 import com.example.common.model.MutualFund;
 import com.example.common.model.MutualFundMeta;
 import com.example.common.model.NavPerDate;
-import com.example.mutualfund.grpc.MutualFundGrpc;
-import com.example.mutualfund.grpc.MutualFundMetaGrpc;
-import com.example.mutualfund.grpc.NavPerDateGrpc;
+import com.example.mutualfund.grpc.*;
+import com.example.worker.web.model.MfApiResponse;
+import com.example.worker.web.client.MutualFundApiWebClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.redis.client.reactive.ReactiveRedisClient;
+import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.jboss.logging.Logger;
@@ -27,7 +27,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static api.service.LocalSearchService.SEARCHABLE_MF_NAME_LIST_CACHE_KEY;
 import static java.util.Objects.nonNull;
 
 @ApplicationScoped
@@ -37,19 +36,54 @@ public class MutualFundService {
     Logger log;
 
     @Inject
+    ObjectMapper objectMapper;
+
+    @Inject
     ReactiveRedisClient redisClient;
 
     @Inject
-    ObjectMapper objectMapper;
-
-    @Inject @RestClient
+    @RestClient
     MutualFundApiWebClient webClient;
+
+    @Inject
+    StatisticsCalculator statisticsCalculator;
 
     private static final String DATE_PATTERN = "dd-MM-yyyy";
     private static final String MF_LIST_CACHE_KEY = "MF_LIST_CACHE_KEY";
     private static final String MF_BY_CODE_CACHE_KEY = "MF_BY_CODE_CACHE_KEY";
 
-    synchronized Uni<MutualFund> retrieveMutualFundNav(long schemeCode) {
+    public Uni<MutualFundGrpc> getMutualFund(long schemeCode) {
+        return redisClient.hget(MF_BY_CODE_CACHE_KEY, String.valueOf(schemeCode))
+                .onItem().transform(response -> {
+                    try {
+                        return objectMapper.readValue(response.toString(), MutualFund.class).convertToGrpcModel();
+                    } catch (JsonProcessingException e) {
+                        log.error("Exception occurred while parsing from json", e);
+                        throw new RuntimeException();
+                    }
+                }).ifNoItem().after(Duration.ofMillis(1)).recoverWithUni(downloadMutualFundNavAndTransform(schemeCode));
+    }
+
+    public Uni<MutualFundStatisticsGrpc> getMutualFundStatistics(long schemeCode) {
+        log.info("getStatistics " + schemeCode);
+        return retrieveMutualFundNav(schemeCode).onItem().transform(mutualFund -> statisticsCalculator.getStatistics(mutualFund));
+    }
+
+    public Multi<MutualFundMetaGrpc> getAllMutualFunds() {
+        return redisClient.get(MF_LIST_CACHE_KEY)
+                .map(response -> {
+                    try {
+                        List<MutualFundMeta> readValue = objectMapper.readValue(response.toString(), new TypeReference<>() {});
+                        return readValue.stream().map(MutualFundMeta::convertToGrpcModel).collect(Collectors.toList());
+                    } catch (JsonProcessingException e) {
+                        log.error("Exception occurred while parsing from json", e);
+                        return new ArrayList<MutualFundMetaGrpc>();
+                    }
+                })
+                .onItem().transformToMulti(items -> Multi.createFrom().iterable(items));
+    }
+
+    private synchronized Uni<MutualFund> retrieveMutualFundNav(long schemeCode) {
         return redisClient.hget(MF_BY_CODE_CACHE_KEY, String.valueOf(schemeCode))
                 .onItem().transform(response -> {
                     try {
@@ -61,34 +95,19 @@ public class MutualFundService {
                 }).ifNoItem().after(Duration.ofMillis(1)).recoverWithUni(downloadMutualFundNav(schemeCode));
     }
 
-    Uni<MutualFundGrpc> downloadMutualFundNavAndTransform(Long schemeCode) {
+    private Uni<MutualFundGrpc> downloadMutualFundNavAndTransform(Long schemeCode) {
         return downloadMutualFundNav(schemeCode)
-                .onItem().transform(mutualFund -> {
-                    var mutualFundMeta = MutualFundMetaGrpc.newBuilder()
-                            .setFundHouse(mutualFund.getMeta().getFundHouse())
-                            .setSchemeCategory(mutualFund.getMeta().getSchemeCategory())
-                            .setSchemeType(mutualFund.getMeta().getSchemeType())
-                            .setSchemeName(mutualFund.getMeta().getSchemeName())
-                            .setSchemeCode(schemeCode)
-                            .build();
-
-                    var navPerDates = mutualFund.getNavPerDates().stream().map(n -> NavPerDateGrpc.newBuilder()
-                            .setDate(n.getDate().format(DateTimeFormatter.BASIC_ISO_DATE))
-                            .setSchemeCode(schemeCode)
-                            .setNav(n.getNav().doubleValue())
-                            .build()).collect(Collectors.toList());
-
-                    return MutualFundGrpc.newBuilder()
-                            .setMeta(mutualFundMeta)
-                            .addAllNavPerDates(navPerDates)
-                            .build();
-                });
+                .onItem()
+                .transform(mutualFund -> MutualFundGrpc.newBuilder()
+                        .setMeta(mutualFund.getMeta().convertToGrpcModel())
+                        .addAllNavPerDates(mutualFund.getNavPerDates().stream().map(NavPerDate::convertToGrpcModel).collect(Collectors.toList()))
+                        .build());
     }
 
     private Uni<MutualFund> downloadMutualFundNav(Long schemeCode) {
         MfApiResponse downloaded = webClient.getMfData(schemeCode);
 
-        if(nonNull(downloaded) && nonNull(downloaded.getMfMetaData()) && nonNull(downloaded.getMfMetaData().getSchemeCode())) {
+        if (nonNull(downloaded) && nonNull(downloaded.getMfMetaData()) && nonNull(downloaded.getMfMetaData().getSchemeCode())) {
             List<NavPerDate> mutualFundNavPerDateList = downloaded.getNavDataList().stream()
                     .map(navData -> new NavPerDate(schemeCode, LocalDate.parse(navData.getDate(),
                             DateTimeFormatter.ofPattern(DATE_PATTERN)), BigDecimal.valueOf(Double.parseDouble(navData.getNav()))))
@@ -102,9 +121,11 @@ public class MutualFundService {
                             .setFundHouse(downloaded.getMfMetaData().getFundHouse()))
                     .setNavPerDates(mutualFundNavPerDateList);
 
-            if(nonNull(mutualFund)) {
+            if (nonNull(mutualFund)) {
                 try {
-                    redisClient.hset(Arrays.asList(MF_BY_CODE_CACHE_KEY, String.valueOf(schemeCode), objectMapper.writeValueAsString(mutualFund))).subscribe();
+                    redisClient.hset(Arrays.asList(MF_BY_CODE_CACHE_KEY, String.valueOf(schemeCode), objectMapper.writeValueAsString(mutualFund)))
+                            .subscribe()
+                            .with(item -> log.info("Redis cache updated with mf data for "+schemeCode+", MF is " + item), Throwable::printStackTrace);
                 } catch (JsonProcessingException e) {
                     log.error("Exception occurred while saving mutual fund after downloaded for {}", schemeCode, e);
                 }
@@ -114,20 +135,22 @@ public class MutualFundService {
                 try {
                     List<MutualFundMeta> fundMetaList = new ArrayList<>();
                     if (nonNull(response)) {
-                        fundMetaList = objectMapper.readValue(response.toString(), new TypeReference<>() {});
+                        fundMetaList = objectMapper.readValue(response.toString(), new TypeReference<>() {
+                        });
                         fundMetaList.add(mutualFund.getMeta());
                     } else {
                         if (mutualFund != null) {
                             fundMetaList = Collections.singletonList(mutualFund.getMeta());
                         }
                     }
-                    redisClient.set(Arrays.asList(MF_LIST_CACHE_KEY, objectMapper.writeValueAsString(fundMetaList)));
+                    return redisClient.set(Arrays.asList(MF_LIST_CACHE_KEY, objectMapper.writeValueAsString(fundMetaList)));
                 } catch (JsonProcessingException e) {
                     log.error("Exception occurred while saving mutual fund list after downloaded for {}", schemeCode, e);
                 }
 
-                return null;
-            });
+                return Uni.createFrom().nullItem();
+            }).subscribe()
+                    .with(item -> log.info("Redis cache updated with mf list, list now is " + item), Throwable::printStackTrace);
 
             return Uni.createFrom().item(mutualFund);
         }
@@ -135,8 +158,8 @@ public class MutualFundService {
         return Uni.createFrom().nullItem();
     }
 
-    public void clearCache() {
-        redisClient.del(Arrays.asList(MF_LIST_CACHE_KEY, MF_BY_CODE_CACHE_KEY, SEARCHABLE_MF_NAME_LIST_CACHE_KEY));
-    }
+    /*public void clearCache() {
+        redisClient.del(Arrays.asList(MF_LIST_CACHE_KEY, MF_BY_CODE_CACHE_KEY, LocalSearchService.SEARCHABLE_MF_NAME_LIST_CACHE_KEY));
+    }*/
 
 }

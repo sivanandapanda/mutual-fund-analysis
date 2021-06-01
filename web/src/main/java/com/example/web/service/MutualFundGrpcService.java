@@ -3,11 +3,12 @@ package com.example.web.service;
 import com.example.common.model.*;
 import com.example.mutualfund.grpc.MutinyMutualFundSearchServiceGrpc;
 import com.example.mutualfund.grpc.MutinyMutualFundServiceGrpc;
-import com.example.mutualfund.grpc.SchemeCodeRequest;
-import com.example.mutualfund.grpc.SearchRequest;
+import com.example.mutualfund.grpc.SchemeCodeGrpcRequest;
+import com.example.mutualfund.grpc.SearchGrpcRequest;
 import com.example.web.model.Dashboard;
 import io.quarkus.grpc.runtime.annotations.GrpcService;
 import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -17,6 +18,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.example.common.util.AppUtils.getAllTags;
+import static com.example.common.util.AppUtils.score;
 
 @ApplicationScoped
 public class MutualFundGrpcService {
@@ -31,15 +35,8 @@ public class MutualFundGrpcService {
 
     public List<Dashboard> getDashBoardFrom(List<Long> schemeCodes) {
         var result = Multi.createFrom().iterable(schemeCodes)
-                .onItem().transformToUni(schemeCode -> mutualFundService.getMutualFundStatistics(SchemeCodeRequest.newBuilder().setSchemeCode(schemeCode).build())
+                .onItem().transformToUni(schemeCode -> mutualFundService.getMutualFundStatistics(SchemeCodeGrpcRequest.newBuilder().setSchemeCode(schemeCode).build())
                         .onItem().transform(m -> {
-                            var mutualFundMeta = new MutualFundMeta();
-                            mutualFundMeta.setFundHouse(m.getMeta().getFundHouse());
-                            mutualFundMeta.setSchemeCategory(m.getMeta().getSchemeCategory());
-                            mutualFundMeta.setSchemeCode(m.getMeta().getSchemeCode());
-                            mutualFundMeta.setSchemeName(m.getMeta().getSchemeName());
-                            mutualFundMeta.setSchemeType(m.getMeta().getSchemeType());
-
                             var statistics = m.getStatisticsList().stream()
                                     .map(s -> new NavStatistics(s.getDays(),
                                             LocalDate.parse(s.getDate(), DateTimeFormatter.BASIC_ISO_DATE),
@@ -48,7 +45,7 @@ public class MutualFundGrpcService {
                                             Move.fromValue(s.getMoveValue())))
                                     .collect(Collectors.toList());
 
-                            return new Dashboard(new MutualFundStatistics(mutualFundMeta, statistics, m.getPercentageIncrease()));
+                            return new Dashboard(new MutualFundStatistics(MutualFundMeta.convertFromGrpcModel(m.getMeta()), statistics, m.getPercentageIncrease()));
                         }))
                 .merge()
                 .collect()
@@ -63,13 +60,24 @@ public class MutualFundGrpcService {
     }
 
     public List<SearchableMutualFund> searchMutualFunds(String searchString) {
-        var result = mutualFundSearchService.searchForMutualFund(SearchRequest.newBuilder().setSearchString(searchString).build())
+        var multi = Multi.createFrom().iterable(getAllTags(searchString));
+
+        var result = multi.onItem()
+                .transformToMulti(tag ->
+                        mutualFundSearchService.searchForMutualFund(SearchGrpcRequest.newBuilder().setSearchString(searchString).build())
+                                .onItem().transform(m -> new SearchableMutualFund(m.getSchemeCode(), m.getSchemeName(), m.getSearchScore())))
+                .merge()
+                .collect()
+                .asList()
+                .map(list -> list.stream().sorted((s1, s2) -> s2.getSearchScore().compareTo(s1.getSearchScore())).collect(Collectors.toList()));
+
+        /*var result = mutualFundSearchService.searchForMutualFund(SearchGrpcRequest.newBuilder().setSearchString(searchString).build())
                 .onItem().transform(m -> new SearchableMutualFund(m.getSchemeCode(), m.getSchemeName(), m.getSearchScore()))
                 .collect()
                 .asList()
                 .map(list -> list.stream()
                         .sorted((s1, s2) -> s2.getSearchScore().compareTo(s1.getSearchScore()))
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList()));*/
 
         List<SearchableMutualFund> searchableMutualFunds = new ArrayList<>();
         result.subscribe().with(searchableMutualFunds::addAll, Throwable::printStackTrace);
@@ -77,18 +85,44 @@ public class MutualFundGrpcService {
     }
 
     public List<Dashboard> exploreMutualFunds(String searchString, int sampleSize) {
-        var result = mutualFundSearchService.searchForMutualFund(SearchRequest.newBuilder().setSearchString(searchString).build())
-                .onItem().transformToUni(s ->
-                        mutualFundService.getMutualFundStatistics(SchemeCodeRequest.newBuilder().setSchemeCode(s.getSchemeCode()).build())
+        var allTags = getAllTags(searchString);
+        var multi = Multi.createFrom().iterable(allTags);
+
+        var searchResults = multi.onItem()
+                .transformToMulti(tag ->
+                        mutualFundSearchService.searchForMutualFund(SearchGrpcRequest.newBuilder().setSearchString(searchString).build())
+                                .onItem().transform(m -> new SearchableMutualFund(m.getSchemeCode(), m.getSchemeName(), score(m.getSchemeName(), allTags))))
+                .merge()
+                .collect()
+                .asList()
+                .map(list -> list.stream()
+                        .sorted((d1, d2) -> d2.getSearchScore().compareTo(d1.getSearchScore()))
+                        .limit(sampleSize)
+                        .collect(Collectors.toList()));
+
+        searchResults.subscribe().with(item -> {
+            Multi.createFrom().iterable(item).onItem().transform(mf ->
+                    mutualFundService.getMutualFundStatistics(SchemeCodeGrpcRequest.newBuilder().setSchemeCode(mf.getSchemeCode()).build())
+                            .onItem()
+                            .transform(m -> {
+                                var statistics = m.getStatisticsList().stream()
+                                        .map(ss -> new NavStatistics(ss.getDays(),
+                                                LocalDate.parse(ss.getDate(), DateTimeFormatter.BASIC_ISO_DATE),
+                                                BigDecimal.valueOf(ss.getNav()),
+                                                TenorEnum.fromValue(ss.getTenorValue()),
+                                                Move.fromValue(ss.getMoveValue())))
+                                        .collect(Collectors.toList());
+
+                                return new Dashboard(new MutualFundStatistics(MutualFundMeta.convertFromGrpcModel(m.getMeta()), statistics, m.getPercentageIncrease()));
+                            }));
+        })
+
+        var transform = searchResults.onItem().transform(s ->
+
+                Multi.createFrom().iterable(s).onItem().transform(mf ->
+                        mutualFundService.getMutualFundStatistics(SchemeCodeGrpcRequest.newBuilder().setSchemeCode(mf.getSchemeCode()).build())
                                 .onItem()
                                 .transform(m -> {
-                                    var mutualFundMeta = new MutualFundMeta();
-                                    mutualFundMeta.setFundHouse(m.getMeta().getFundHouse());
-                                    mutualFundMeta.setSchemeCategory(m.getMeta().getSchemeCategory());
-                                    mutualFundMeta.setSchemeCode(m.getMeta().getSchemeCode());
-                                    mutualFundMeta.setSchemeName(m.getMeta().getSchemeName());
-                                    mutualFundMeta.setSchemeType(m.getMeta().getSchemeType());
-
                                     var statistics = m.getStatisticsList().stream()
                                             .map(ss -> new NavStatistics(ss.getDays(),
                                                     LocalDate.parse(ss.getDate(), DateTimeFormatter.BASIC_ISO_DATE),
@@ -97,7 +131,51 @@ public class MutualFundGrpcService {
                                                     Move.fromValue(ss.getMoveValue())))
                                             .collect(Collectors.toList());
 
-                                    return new Dashboard(new MutualFundStatistics(mutualFundMeta, statistics, m.getPercentageIncrease()));
+                                    return new Dashboard(new MutualFundStatistics(MutualFundMeta.convertFromGrpcModel(m.getMeta()), statistics, m.getPercentageIncrease()));
+                                })
+                ));
+
+        var result = searchResults.onItem().transformToUni(s ->
+
+                Multi.createFrom().iterable(s).onItem().transform(mf ->
+                    mutualFundService.getMutualFundStatistics(SchemeCodeGrpcRequest.newBuilder().setSchemeCode(mf.getSchemeCode()).build())
+                            .onItem()
+                            .transform(m -> {
+                                var statistics = m.getStatisticsList().stream()
+                                        .map(ss -> new NavStatistics(ss.getDays(),
+                                                LocalDate.parse(ss.getDate(), DateTimeFormatter.BASIC_ISO_DATE),
+                                                BigDecimal.valueOf(ss.getNav()),
+                                                TenorEnum.fromValue(ss.getTenorValue()),
+                                                Move.fromValue(ss.getMoveValue())))
+                                        .collect(Collectors.toList());
+
+                                return new Dashboard(new MutualFundStatistics(MutualFundMeta.convertFromGrpcModel(m.getMeta()), statistics, m.getPercentageIncrease()));
+                            })
+                )
+
+
+                .merge()
+                .collect()
+                .asList()
+                .map(list -> list.stream()
+                        .sorted((d1, d2) -> d2.getMutualFundStatistics().getPercentageIncrease().compareTo(d1.getMutualFundStatistics().getPercentageIncrease()))
+                        .limit(sampleSize)
+                        .collect(Collectors.toList()));
+
+        /*var result = mutualFundSearchService.searchForMutualFund(SearchGrpcRequest.newBuilder().setSearchString(searchString).build())
+                .onItem().transformToUni(s ->
+                        mutualFundService.getMutualFundStatistics(SchemeCodeGrpcRequest.newBuilder().setSchemeCode(s.getSchemeCode()).build())
+                                .onItem()
+                                .transform(m -> {
+                                    var statistics = m.getStatisticsList().stream()
+                                            .map(ss -> new NavStatistics(ss.getDays(),
+                                                    LocalDate.parse(ss.getDate(), DateTimeFormatter.BASIC_ISO_DATE),
+                                                    BigDecimal.valueOf(ss.getNav()),
+                                                    TenorEnum.fromValue(ss.getTenorValue()),
+                                                    Move.fromValue(ss.getMoveValue())))
+                                            .collect(Collectors.toList());
+
+                                    return new Dashboard(new MutualFundStatistics(MutualFundMeta.convertFromGrpcModel(m.getMeta()), statistics, m.getPercentageIncrease()));
                                 })
                 )
                 .merge()
@@ -106,7 +184,7 @@ public class MutualFundGrpcService {
                 .map(list -> list.stream()
                         .sorted((d1, d2) -> d2.getMutualFundStatistics().getPercentageIncrease().compareTo(d1.getMutualFundStatistics().getPercentageIncrease()))
                         .limit(sampleSize)
-                        .collect(Collectors.toList()));
+                        .collect(Collectors.toList()));*/
 
         List<Dashboard> dashboards = new ArrayList<>();
         result.subscribe().with(dashboards::addAll, Throwable::printStackTrace);

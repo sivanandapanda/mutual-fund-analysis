@@ -15,10 +15,6 @@ message MutualFundMetaGrpc {
   string schemeName = 5;
 }
 
-message SchemeCodeRequest {
-  int64 schemeCode = 1;
-}
-
 message NavPerDateGrpc {
   int64 schemeCode = 1;
   string date = 2;
@@ -35,7 +31,7 @@ message NavStatisticsGrpc {
   string date = 2;
   double nav = 3;
 
-  enum TenorEnum {
+  enum TenorEnumGrpc {
       ONED = 0;
       THREED = 1;
       ONEW = 2;
@@ -48,14 +44,14 @@ message NavStatisticsGrpc {
       FIVEY = 9;
       INCEPTIO = 10;
   }
-  TenorEnum tenor = 4;
+  TenorEnumGrpc tenor = 4;
 
-  enum Move {
+  enum MoveGrpc {
       UP = 0;
       DOWN = 1;
       NO_CHANGE = 2;
   }
-  Move move =5;
+  MoveGrpc move =5;
 }
 
 message MutualFundStatisticsGrpc {
@@ -64,14 +60,16 @@ message MutualFundStatisticsGrpc {
   double percentageIncrease = 3;
 }
 
-message MutualFundSearchResult {
+message MutualFundSearchResultGrpc {
   int64 schemeCode = 1;
   string schemeName = 2;
-  int64 searchScore = 3;
+  double searchScore = 3;
 }
 
-message SearchRequest {
+message SchemeCodeGrpcRequest {
+  int64 schemeCode = 1;
+}
+
+message SearchGrpcRequest {
   string searchString = 1;
-  int32 page = 2;
-  int32 size = 3;
 }

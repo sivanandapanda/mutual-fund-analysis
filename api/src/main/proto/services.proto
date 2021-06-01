@@ -9,10 +9,10 @@ package com.example.mutualfund.grpc;
 
 service MutualFundService {
   rpc getAllMutualFunds(Empty) returns (stream MutualFundMetaGrpc) {}
-  rpc getMutualFund(SchemeCodeRequest) returns (MutualFundGrpc) {}
-  rpc getMutualFundStatistics(SchemeCodeRequest) returns (MutualFundStatisticsGrpc) {}
+  rpc getMutualFund(SchemeCodeGrpcRequest) returns (MutualFundGrpc) {}
+  rpc getMutualFundStatistics(SchemeCodeGrpcRequest) returns (MutualFundStatisticsGrpc) {}
 }
 
 service MutualFundSearchService {
-  rpc searchForMutualFund(SearchRequest) returns (stream MutualFundSearchResult) {}
+  rpc searchForMutualFund(SearchGrpcRequest) returns (stream MutualFundSearchResultGrpc) {}
 }

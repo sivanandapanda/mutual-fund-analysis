@@ -6,8 +6,10 @@
     <artifactId>mutual-fund-analysis</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
+
   <artifactId>api</artifactId>
   <modelVersion>4.0.0</modelVersion>
+
   <properties>
     <compiler-plugin.version>3.8.1</compiler-plugin.version>
     <maven.compiler.parameters>true</maven.compiler.parameters>
@@ -21,6 +23,7 @@
     <quarkus.platform.version>${quarkus.version}</quarkus.platform.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
   </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -32,12 +35,14 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-grpc</artifactId>
     </dependency>
   </dependencies>
+
   <build>
     <plugins>
       <plugin>
