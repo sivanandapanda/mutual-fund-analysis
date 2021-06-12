@@ -8,6 +8,7 @@ import com.example.mutualfund.grpc.SearchGrpcRequest;
 import com.example.web.model.Dashboard;
 import io.quarkus.grpc.runtime.annotations.GrpcService;
 import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -32,8 +33,8 @@ public class MutualFundGrpcService {
     @GrpcService("mf-search-service")
     MutinyMutualFundSearchServiceGrpc.MutinyMutualFundSearchServiceStub mutualFundSearchService;
 
-    public List<Dashboard> getDashBoardFrom(List<Long> schemeCodes) {
-        var result = Multi.createFrom().iterable(schemeCodes)
+    public Uni<List<Dashboard>> getDashBoardFrom(List<Long> schemeCodes) {
+        return Multi.createFrom().iterable(schemeCodes)
                 .onItem().transformToUni(schemeCode -> mutualFundService.getMutualFundStatistics(SchemeCodeGrpcRequest.newBuilder().setSchemeCode(schemeCode).build())
                         .onItem().transform(m -> {
                             var statistics = m.getStatisticsList().stream()
@@ -52,16 +53,12 @@ public class MutualFundGrpcService {
                 .map(list -> list.stream()
                         .sorted((d1, d2) -> d2.getMutualFundStatistics().getMutualFundMeta().getSchemeCode().compareTo(d1.getMutualFundStatistics().getMutualFundMeta().getSchemeCode()))
                         .collect(Collectors.toList()));
-
-        List<Dashboard> dashboards = new ArrayList<>();
-        result.subscribe().with(dashboards::addAll, Throwable::printStackTrace);
-        return dashboards;
     }
 
-    public List<SearchableMutualFund> searchMutualFunds(String searchString) {
+    public Uni<List<SearchableMutualFund>> searchMutualFunds(String searchString) {
         var multi = Multi.createFrom().iterable(getAllTags(searchString));
 
-        var result = multi.onItem()
+        return multi.onItem()
                 .transformToMulti(tag ->
                         mutualFundSearchService.searchForMutualFund(SearchGrpcRequest.newBuilder().setSearchString(searchString).build())
                                 .onItem().transform(m -> new SearchableMutualFund(m.getSchemeCode(), m.getSchemeName(), m.getSearchScore())))
@@ -69,13 +66,9 @@ public class MutualFundGrpcService {
                 .collect()
                 .asList()
                 .map(list -> list.stream().sorted((s1, s2) -> s2.getSearchScore().compareTo(s1.getSearchScore())).collect(Collectors.toList()));
-
-        List<SearchableMutualFund> searchableMutualFunds = new ArrayList<>();
-        result.subscribe().with(searchableMutualFunds::addAll, Throwable::printStackTrace);
-        return searchableMutualFunds;
     }
 
-    public List<Dashboard> exploreMutualFunds(String searchString, int sampleSize) {
+    public Uni<List<Dashboard>> exploreMutualFunds(String searchString, int sampleSize) {
         var allTags = getAllTags(searchString);
         var multi = Multi.createFrom().iterable(allTags);
 
@@ -95,8 +88,7 @@ public class MutualFundGrpcService {
                 .subscribe()
                 .with(searchResults::addAll, Throwable::printStackTrace);
 
-        List<Dashboard> dashboards = new ArrayList<>();
-        Multi.createFrom().iterable(searchResults).onItem().transformToUni(searchableMutualFund ->
+        return Multi.createFrom().iterable(searchResults).onItem().transformToUni(searchableMutualFund ->
                 mutualFundService.getMutualFundStatistics(SchemeCodeGrpcRequest.newBuilder().setSchemeCode(searchableMutualFund.getSchemeCode()).build())
                         .onItem()
                         .transform(m -> {
@@ -115,10 +107,6 @@ public class MutualFundGrpcService {
                 .asList()
                 .map(list -> list.stream()
                         .sorted((d1, d2) -> d2.getMutualFundStatistics().getPercentageIncrease().compareTo(d1.getMutualFundStatistics().getPercentageIncrease()))
-                        .collect(Collectors.toList()))
-                .subscribe()
-                .with(dashboards::addAll, Throwable::printStackTrace);
-
-        return dashboards;
+                        .collect(Collectors.toList()));
     }
 }
