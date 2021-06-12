@@ -125,7 +125,7 @@ public class MutualFundService {
                 try {
                     redisClient.hset(Arrays.asList(MF_BY_CODE_CACHE_KEY, String.valueOf(schemeCode), objectMapper.writeValueAsString(mutualFund)))
                             .subscribe()
-                            .with(item -> log.info("Redis cache updated with mf data for "+schemeCode+", MF is " + item), Throwable::printStackTrace);
+                            .with(item -> log.info("Redis cache updated with mf data for "+schemeCode), Throwable::printStackTrace);
                 } catch (JsonProcessingException e) {
                     log.error("Exception occurred while saving mutual fund after downloaded for {}", schemeCode, e);
                 }
@@ -149,8 +149,7 @@ public class MutualFundService {
                 }
 
                 return Uni.createFrom().nullItem();
-            }).subscribe()
-                    .with(item -> log.info("Redis cache updated with mf list, list now is " + item), Throwable::printStackTrace);
+            }).subscribe().with(item -> log.info("Redis cache updated with mf list"), Throwable::printStackTrace);
 
             return Uni.createFrom().item(mutualFund);
         }
