@@ -47,7 +47,7 @@ public class MutualFundWebResource {
     @Timed(name = "exploreMutualFundsTimer")
     public Uni<List<Dashboard>> exploreMutualFunds(@QueryParam("schemeName") String schemeName, @QueryParam("sampleSize") int sampleSize) {
         if(sampleSize <= 0) {
-            sampleSize = 500;
+            sampleSize = 10;
         }
         return service.exploreMutualFunds(schemeName, sampleSize);
     }

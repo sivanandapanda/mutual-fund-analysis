@@ -1,7 +1,7 @@
 package com.example.worker.web.client;
 
-import com.example.common.model.SearchableMutualFund;
 import com.example.worker.web.model.MfApiResponse;
+import com.example.worker.web.model.MfMetaData;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 import org.jboss.resteasy.annotations.jaxrs.PathParam;
 
@@ -17,6 +17,6 @@ public interface MutualFundApiWebClient {
     MfApiResponse getMfData(@PathParam long schemeCode);
 
     @GET
-    List<SearchableMutualFund> getAllMfMetaData();
+    List<MfMetaData> getAllMfMetaData();
 
 }

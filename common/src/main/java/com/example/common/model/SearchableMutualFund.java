@@ -1,7 +1,5 @@
 package com.example.common.model;
 
-import com.example.mutualfund.grpc.MutualFundSearchResultGrpc;
-
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -46,12 +44,5 @@ public class SearchableMutualFund implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(schemeCode, schemeName, searchScore);
-    }
-
-    public MutualFundSearchResultGrpc convertToGrpcModel() {
-        return MutualFundSearchResultGrpc.newBuilder()
-                .setSchemeCode(this.getSchemeCode())
-                .setSchemeName(this.getSchemeName())
-                .build();
     }
 }
