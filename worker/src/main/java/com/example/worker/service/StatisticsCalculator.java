@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 
 import static com.example.common.model.TenorEnum.*;
 
+
 @ApplicationScoped
 public class StatisticsCalculator {
 
@@ -87,7 +88,7 @@ public class StatisticsCalculator {
         try {
             if (Objects.nonNull(statistics)) {
 
-                Optional<NavStatisticsGrpc> fiveY = statistics.stream().filter(s -> s.getTenorValue() == TenorEnum.FIVEY.getTenorValue()).findAny();
+                Optional<NavStatisticsGrpc> fiveY = statistics.stream().filter(s -> s.getTenorValue() == FIVEY.getTenorValue()).findAny();
                 Optional<NavStatisticsGrpc> oneD = statistics.stream()
                         .filter(s -> /*s.getDate().isAfter(LocalDate.now().minusDays(30)) &&*/ s.getTenorValue() == TenorEnum.ONED.getTenorValue()).findAny(); //TODO check this
 

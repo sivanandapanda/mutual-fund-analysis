@@ -14,13 +14,11 @@ import org.jboss.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Stream;
 
 import static com.example.common.util.AppUtils.getAllTags;
 import static java.util.stream.Collectors.toList;
@@ -45,7 +43,7 @@ public class LocalSearchService {
     private static final AtomicLong counter = new AtomicLong(0);
     public static final String SEARCHABLE_MF_NAME_LIST_CACHE_KEY = "SEARCHABLE_MF";
 
-    public void saveAll(List<SearchableMutualFund> mutualFundList) {
+    private void saveAll(List<SearchableMutualFund> mutualFundList) {
         Map<String, List<SearchableMutualFund>> cache = new HashMap<>();
         counter.set(0);
 

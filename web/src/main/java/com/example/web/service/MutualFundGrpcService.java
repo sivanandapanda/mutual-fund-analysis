@@ -5,7 +5,7 @@ import com.example.mutualfund.grpc.MutinyMutualFundSearchServiceGrpc;
 import com.example.mutualfund.grpc.MutinyMutualFundServiceGrpc;
 import com.example.mutualfund.grpc.SchemeCodeGrpcRequest;
 import com.example.mutualfund.grpc.SearchGrpcRequest;
-import com.example.web.model.Dashboard;
+import com.example.web.model.*;
 import io.quarkus.grpc.runtime.annotations.GrpcService;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
