@@ -1,8 +1,8 @@
-package com.example.web.model;
+package com.example.common.model;
 
-import com.example.common.model.MutualFundStatistics;
+import java.io.Serializable;
 
-public class Dashboard {
+public class Dashboard implements Serializable {
     private MutualFundStatistics mutualFundStatistics;
 
     public Dashboard() {}

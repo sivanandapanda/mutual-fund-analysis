@@ -1,7 +1,7 @@
 package com.example.web.resource;
 
 import com.example.common.model.SearchableMutualFund;
-import com.example.web.model.Dashboard;
+import com.example.common.model.Dashboard;
 import com.example.web.service.MutualFundGrpcService;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.metrics.annotation.Counted;
@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("mf/api/v1")
+@Path("/api/v1/mf")
 public class MutualFundWebResource {
 
     @Inject
@@ -33,7 +33,7 @@ public class MutualFundWebResource {
     }
 
     @GET
-    @Path("mutualfund/search")
+    @Path("search")
     @Counted(name = "searchMutualFunds")
     @Timed(name = "searchMutualFundsTimer")
     public Uni<List<SearchableMutualFund>> searchMutualFunds(@QueryParam("schemeName") String schemeName) {
@@ -42,7 +42,7 @@ public class MutualFundWebResource {
 
     @GET
     @GZIP
-    @Path("mutualfund/explore")
+    @Path("explore")
     @Counted(name = "getMutualFund")
     @Timed(name = "exploreMutualFundsTimer")
     public Uni<List<Dashboard>> exploreMutualFunds(@QueryParam("schemeName") String schemeName, @QueryParam("sampleSize") int sampleSize) {

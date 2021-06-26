@@ -1,12 +1,22 @@
 #!/bin/bash
 
-mvn clean install package 
+mvn clean install -DskipTests
 
-cd worker
-docker build -f src/main/docker/Dockerfile.jvm -t sivadocker17/worker .
+mvn -f ui/pom.xml vaadin:prepare-frontend
+mvn -f ui/pom.xml clean package -Pproduction spring-boot:repackage
 
-cd ../web
-docker build -f src/main/docker/Dockerfile.jvm -t sivadocker17/web .
+#mvn -f worker/pom.xml clean package
+mvn -f worker/pom.xml package -Pnative -Dquarkus.native.container-build=true
 
-cd ../frontend
-docker build -f Dockerfile -t sivadocker17/frontend .
+#mvn -f web/pom.xml clean package
+mvn -f web/pom.xml package -Pnative -Dquarkus.native.container-build=true
+
+docker build -t sivadocker17/mf-analysis-ui ui/.
+
+#docker build -f server/src/main/docker/Dockerfile.jvm -t sivadocker17/fibonacci-server server/.
+docker build -f worker/src/main/docker/Dockerfile.native -t sivadocker17/mf-analysis-worker-native worker/.
+
+#docker build -f server/src/main/docker/Dockerfile.jvm -t sivadocker17/fibonacci-server server/.
+docker build -f web/src/main/docker/Dockerfile.native -t sivadocker17/mf-analysis-web-native web/.
+
+docker image ls | head -3

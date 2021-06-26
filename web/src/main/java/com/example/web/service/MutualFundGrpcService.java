@@ -1,11 +1,8 @@
 package com.example.web.service;
 
 import com.example.common.model.*;
-import com.example.mutualfund.grpc.MutinyMutualFundSearchServiceGrpc;
-import com.example.mutualfund.grpc.MutinyMutualFundServiceGrpc;
-import com.example.mutualfund.grpc.SchemeCodeGrpcRequest;
-import com.example.mutualfund.grpc.SearchGrpcRequest;
-import com.example.web.model.Dashboard;
+import com.example.mutualfund.grpc.*;
+import com.example.common.model.Dashboard;
 import io.quarkus.grpc.runtime.annotations.GrpcService;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
@@ -44,7 +41,7 @@ public class MutualFundGrpcService {
                                             Move.fromValue(s.getMoveValue())))
                                     .collect(Collectors.toList());
 
-                            return new Dashboard(new MutualFundStatistics(MutualFundMeta.convertFromGrpcModel(m.getMeta()), statistics, m.getPercentageIncrease()));
+                            return new Dashboard(new MutualFundStatistics(convertFromGrpcModel(m.getMeta()), statistics, m.getPercentageIncrease()));
                         }))
                 .merge()
                 .collect()
@@ -93,7 +90,7 @@ public class MutualFundGrpcService {
                                                             Move.fromValue(ss.getMoveValue())))
                                                     .collect(Collectors.toList());
 
-                                            return new Dashboard(new MutualFundStatistics(MutualFundMeta.convertFromGrpcModel(m.getMeta()), statistics, m.getPercentageIncrease()));
+                                            return new Dashboard(new MutualFundStatistics(convertFromGrpcModel(m.getMeta()), statistics, m.getPercentageIncrease()));
                                         }))
                                 .merge()
                                 .collect()
@@ -102,5 +99,15 @@ public class MutualFundGrpcService {
                                         .sorted((d1, d2) -> d2.getMutualFundStatistics().getPercentageIncrease().compareTo(d1.getMutualFundStatistics().getPercentageIncrease()))
                                         .collect(Collectors.toList()))
                 );
+    }
+
+    private static MutualFundMeta convertFromGrpcModel(MutualFundMetaGrpc m) {
+        var mutualFundMeta = new MutualFundMeta();
+        mutualFundMeta.setFundHouse(m.getFundHouse());
+        mutualFundMeta.setSchemeCategory(m.getSchemeCategory());
+        mutualFundMeta.setSchemeCode(m.getSchemeCode());
+        mutualFundMeta.setSchemeName(m.getSchemeName());
+        mutualFundMeta.setSchemeType(m.getSchemeType());
+        return mutualFundMeta;
     }
 }

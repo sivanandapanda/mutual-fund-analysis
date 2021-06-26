@@ -4,6 +4,7 @@ import com.example.common.model.MutualFund;
 import com.example.common.model.MutualFundMeta;
 import com.example.common.model.NavPerDate;
 import com.example.mutualfund.grpc.*;
+import com.example.worker.util.GrpcConverter;
 import com.example.worker.web.model.MfApiResponse;
 import com.example.worker.web.client.MutualFundApiWebClient;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -27,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.example.worker.util.GrpcConverter.convertToGrpcModel;
 import static java.util.Objects.nonNull;
 
 @ApplicationScoped
@@ -56,7 +58,7 @@ public class MutualFundService {
         return redisClient.hget(MF_BY_CODE_CACHE_KEY, String.valueOf(schemeCode))
                 .onItem().transform(response -> {
                     try {
-                        return objectMapper.readValue(response.toString(), MutualFund.class).convertToGrpcModel();
+                        return convertToGrpcModel(objectMapper.readValue(response.toString(), MutualFund.class));
                     } catch (JsonProcessingException e) {
                         log.error("Exception occurred while parsing from json", e);
                         throw new RuntimeException();
@@ -74,7 +76,7 @@ public class MutualFundService {
                 .map(response -> {
                     try {
                         List<MutualFundMeta> readValue = objectMapper.readValue(response.toString(), new TypeReference<>() {});
-                        return readValue.stream().map(MutualFundMeta::convertToGrpcModel).collect(Collectors.toList());
+                        return readValue.stream().map(GrpcConverter::convertToGrpcModel).collect(Collectors.toList());
                     } catch (JsonProcessingException e) {
                         log.error("Exception occurred while parsing from json", e);
                         return new ArrayList<MutualFundMetaGrpc>();
@@ -99,8 +101,8 @@ public class MutualFundService {
         return downloadMutualFundNav(schemeCode)
                 .onItem()
                 .transform(mutualFund -> MutualFundGrpc.newBuilder()
-                        .setMeta(mutualFund.getMeta().convertToGrpcModel())
-                        .addAllNavPerDates(mutualFund.getNavPerDates().stream().map(NavPerDate::convertToGrpcModel).collect(Collectors.toList()))
+                        .setMeta(convertToGrpcModel(mutualFund.getMeta()))
+                        .addAllNavPerDates(mutualFund.getNavPerDates().stream().map(GrpcConverter::convertToGrpcModel).collect(Collectors.toList()))
                         .build());
     }
 
@@ -160,5 +162,4 @@ public class MutualFundService {
     /*public void clearCache() {
         redisClient.del(Arrays.asList(MF_LIST_CACHE_KEY, MF_BY_CODE_CACHE_KEY, LocalSearchService.SEARCHABLE_MF_NAME_LIST_CACHE_KEY));
     }*/
-
 }

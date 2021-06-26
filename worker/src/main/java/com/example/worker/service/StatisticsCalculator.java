@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.example.common.model.TenorEnum.*;
+import static com.example.worker.util.GrpcConverter.convertToGrpcModel;
 
 
 @ApplicationScoped
@@ -47,7 +48,7 @@ public class StatisticsCalculator {
 
         return MutualFundStatisticsGrpc.newBuilder()
                 .addAllStatistics(statistics)
-                .setMeta(mutualFund.getMeta().convertToGrpcModel())
+                .setMeta(convertToGrpcModel(mutualFund.getMeta()))
                 .setPercentageIncrease(navChangeIn5Years(statistics, mutualFund.getMeta().getSchemeName()))
                 .build();
     }

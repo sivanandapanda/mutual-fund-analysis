@@ -1,0 +1,30 @@
+version: '3'
+services:
+  postgres:
+    image: 'postgres:10.5'
+    environment:
+      - POSTGRES_USER=quarkus_test
+      - POSTGRES_PASSWORD=quarkus_test
+      - POSTGRES_DB=quarkus_test
+  redis:
+    image: 'redis:5.0.6'
+  worker:
+    image: 'sivadocker17/fibonacci-worker'
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_TIMEOUT=60000
+      - REDIS_PASSWORD=
+  server:
+    image: 'sivadocker17/fibonacci-server-native'
+    environment:
+      - PG_USER=quarkus_test
+      - PG_PASSWORD=quarkus_test
+      - PG_URL=postgresql://postgres:5432/quarkus_test
+      - REDIS_URL=redis://redis:6379
+  ui:
+    image: 'sivadocker17/fibonacci-ui'
+    environment:
+      - FIBONACCI_SERVER_URL=http://server:8081
+    ports:
+      - 8080:8080

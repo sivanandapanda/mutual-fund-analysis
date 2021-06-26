@@ -1,12 +1,9 @@
 package com.example.common.model;
 
 
-import com.example.mutualfund.grpc.NavPerDateGrpc;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class NavPerDate implements Serializable {
@@ -47,12 +44,5 @@ public class NavPerDate implements Serializable {
         return Objects.hash(schemeCode, date, nav);
     }
 
-    public NavPerDateGrpc convertToGrpcModel() {
-        return NavPerDateGrpc.newBuilder()
-                .setDate(this.getDate().format(DateTimeFormatter.BASIC_ISO_DATE))
-                .setSchemeCode(this.getSchemeCode())
-                .setNav(this.getNav().doubleValue())
-                .build();
-    }
 }
 

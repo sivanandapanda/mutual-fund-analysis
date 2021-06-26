@@ -28,23 +28,12 @@
         <protoc.version>3.5.1</protoc.version>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-bom</artifactId>
-                <version>${quarkus.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
     <modules>
         <module>api</module>
         <module>common</module>
         <module>worker</module>
         <module>web</module>
+        <module>ui</module>
     </modules>
 
 </project>

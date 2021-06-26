@@ -1,8 +1,5 @@
 package com.example.common.model;
 
-
-import com.example.mutualfund.grpc.MutualFundMetaGrpc;
-
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -73,23 +70,4 @@ public class MutualFundMeta implements Serializable {
         return Objects.hash(fundHouse, schemeType, schemeCategory, schemeCode, schemeName);
     }
 
-    public MutualFundMetaGrpc convertToGrpcModel() {
-        return MutualFundMetaGrpc.newBuilder()
-                .setFundHouse(this.getFundHouse())
-                .setSchemeCategory(this.getSchemeCategory())
-                .setSchemeType(this.getSchemeType())
-                .setSchemeName(this.getSchemeName())
-                .setSchemeCode(this.getSchemeCode())
-                .build();
-    }
-
-    public static MutualFundMeta convertFromGrpcModel(MutualFundMetaGrpc m) {
-        var mutualFundMeta = new MutualFundMeta();
-        mutualFundMeta.setFundHouse(m.getFundHouse());
-        mutualFundMeta.setSchemeCategory(m.getSchemeCategory());
-        mutualFundMeta.setSchemeCode(m.getSchemeCode());
-        mutualFundMeta.setSchemeName(m.getSchemeName());
-        mutualFundMeta.setSchemeType(m.getSchemeType());
-        return mutualFundMeta;
-    }
 }
