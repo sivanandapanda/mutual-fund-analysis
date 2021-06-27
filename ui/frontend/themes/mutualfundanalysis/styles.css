@@ -1,0 +1,7 @@
+@import url('./main-layout.css');
+@import url('./views/search-view.css');
+@import url('./views/explore-view.css');
+@import url('lumo-css-framework/all-classes.css');    html {
+      --lumo-border-radius: calc(var(--lumo-size-m) / 2);
+
+    }

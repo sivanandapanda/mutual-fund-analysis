@@ -1,0 +1,2 @@
+grpcurl -plaintext localhost:9001 list
+grpcurl -plaintext localhost:9001 describe com.example.mutualfund.grpc.MutualFundService

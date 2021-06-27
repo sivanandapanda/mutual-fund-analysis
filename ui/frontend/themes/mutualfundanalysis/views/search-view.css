@@ -1,0 +1,9 @@
+.search-view {
+  display: block;
+  padding: 1em;
+}
+
+.search-result-grid{
+    width: 1000px;
+    margin-top: 20px;
+}

@@ -1,0 +1,390 @@
+[INFO] com.example.application:ui:jar:1.0-SNAPSHOT
+[INFO] +- com.example:common:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- com.example:api:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  \- io.quarkus:quarkus-grpc:jar:1.13.6.Final:compile
+[INFO] |     +- jakarta.annotation:jakarta.annotation-api:jar:1.3.5:compile
+[INFO] |     +- io.quarkus:quarkus-grpc-common:jar:1.13.6.Final:compile
+[INFO] |     |  +- com.google.code.findbugs:jsr305:jar:3.0.2:compile
+[INFO] |     |  +- io.vertx:vertx-grpc:jar:3.9.6:compile
+[INFO] |     |  |  +- io.vertx:vertx-core:jar:3.9.6:compile
+[INFO] |     |  |  |  +- io.netty:netty-common:jar:4.1.63.Final:compile
+[INFO] |     |  |  |  +- io.netty:netty-buffer:jar:4.1.63.Final:compile
+[INFO] |     |  |  |  +- io.netty:netty-transport:jar:4.1.63.Final:compile
+[INFO] |     |  |  |  +- io.netty:netty-handler:jar:4.1.63.Final:compile
+[INFO] |     |  |  |  +- io.netty:netty-handler-proxy:jar:4.1.63.Final:compile
+[INFO] |     |  |  |  |  \- io.netty:netty-codec-socks:jar:4.1.63.Final:compile
+[INFO] |     |  |  |  +- io.netty:netty-codec-http:jar:4.1.63.Final:compile
+[INFO] |     |  |  |  +- io.netty:netty-codec-http2:jar:4.1.63.Final:compile
+[INFO] |     |  |  |  +- io.netty:netty-resolver:jar:4.1.63.Final:compile
+[INFO] |     |  |  |  \- io.netty:netty-resolver-dns:jar:4.1.63.Final:compile
+[INFO] |     |  |  |     \- io.netty:netty-codec-dns:jar:4.1.63.Final:compile
+[INFO] |     |  |  +- io.grpc:grpc-netty:jar:1.34.0:compile
+[INFO] |     |  |  |  +- io.grpc:grpc-core:jar:1.34.0:compile
+[INFO] |     |  |  |  \- io.perfmark:perfmark-api:jar:0.19.0:runtime
+[INFO] |     |  |  \- io.grpc:grpc-protobuf:jar:1.34.0:compile
+[INFO] |     |  |     +- com.google.protobuf:protobuf-java:jar:3.14.0:compile
+[INFO] |     |  |     +- com.google.api.grpc:proto-google-common-protos:jar:1.17.0:compile
+[INFO] |     |  |     \- io.grpc:grpc-protobuf-lite:jar:1.34.0:compile
+[INFO] |     |  \- io.quarkus:quarkus-vertx:jar:1.13.6.Final:compile
+[INFO] |     |     +- io.quarkus:quarkus-netty:jar:1.13.6.Final:compile
+[INFO] |     |     |  \- io.netty:netty-codec:jar:4.1.63.Final:compile
+[INFO] |     |     \- io.smallrye.reactive:smallrye-mutiny-vertx-core:jar:1.5.0:compile
+[INFO] |     |        +- io.smallrye.reactive:smallrye-mutiny-vertx-runtime:jar:1.5.0:compile
+[INFO] |     |        \- io.smallrye.reactive:vertx-mutiny-generator:jar:1.5.0:compile
+[INFO] |     |           \- io.vertx:vertx-codegen:jar:3.9.6:compile
+[INFO] |     |              \- org.mvel:mvel2:jar:2.3.1.Final:compile
+[INFO] |     +- io.quarkus:quarkus-core:jar:1.13.6.Final:compile
+[INFO] |     |  +- io.quarkus:quarkus-ide-launcher:jar:1.13.6.Final:compile
+[INFO] |     |  +- io.quarkus:quarkus-development-mode-spi:jar:1.13.6.Final:compile
+[INFO] |     |  +- io.smallrye.config:smallrye-config:jar:1.13.1:compile
+[INFO] |     |  |  +- io.smallrye.common:smallrye-common-expression:jar:1.5.0:compile
+[INFO] |     |  |  |  \- io.smallrye.common:smallrye-common-function:jar:1.5.0:compile
+[INFO] |     |  |  +- io.smallrye.common:smallrye-common-constraint:jar:1.5.0:compile
+[INFO] |     |  |  +- io.smallrye.common:smallrye-common-classloader:jar:1.5.0:compile
+[INFO] |     |  |  \- io.smallrye.config:smallrye-config-common:jar:1.13.1:compile
+[INFO] |     |  +- org.jboss.logmanager:jboss-logmanager-embedded:jar:1.0.9:compile
+[INFO] |     |  +- org.jboss.logging:jboss-logging-annotations:jar:2.2.0.Final:compile
+[INFO] |     |  +- org.jboss.threads:jboss-threads:jar:3.2.0.Final:compile
+[INFO] |     |  +- org.jboss.slf4j:slf4j-jboss-logmanager:jar:1.1.0.Final:compile
+[INFO] |     |  +- org.graalvm.sdk:graal-sdk:jar:21.0.0:compile
+[INFO] |     |  +- org.wildfly.common:wildfly-common:jar:1.5.4.Final-format-001:compile
+[INFO] |     |  \- io.quarkus:quarkus-bootstrap-runner:jar:1.13.6.Final:compile
+[INFO] |     |     \- io.smallrye.common:smallrye-common-io:jar:1.5.0:compile
+[INFO] |     +- io.quarkus:quarkus-grpc-stubs:jar:1.13.6.Final:compile
+[INFO] |     +- io.grpc:grpc-stub:jar:1.34.0:compile
+[INFO] |     |  +- io.grpc:grpc-api:jar:1.34.0:compile
+[INFO] |     |  |  \- io.grpc:grpc-context:jar:1.34.0:compile
+[INFO] |     |  +- com.google.guava:guava:jar:30.1-jre:compile
+[INFO] |     |  |  +- com.google.guava:failureaccess:jar:1.0.1:compile
+[INFO] |     |  |  +- com.google.guava:listenablefuture:jar:9999.0-empty-to-avoid-conflict-with-guava:compile
+[INFO] |     |  |  \- com.google.j2objc:j2objc-annotations:jar:1.3:compile
+[INFO] |     |  \- com.google.errorprone:error_prone_annotations:jar:2.2.0:compile
+[INFO] |     +- io.quarkus:quarkus-mutiny:jar:1.13.6.Final:compile
+[INFO] |     |  +- io.smallrye.reactive:mutiny:jar:0.14.0:compile
+[INFO] |     |  |  \- org.reactivestreams:reactive-streams:jar:1.0.3:compile
+[INFO] |     |  \- io.smallrye.reactive:mutiny-smallrye-context-propagation:jar:0.14.0:compile
+[INFO] |     \- io.smallrye.common:smallrye-common-annotation:jar:1.5.0:compile
+[INFO] +- com.vaadin:vaadin:jar:14.6.4:compile
+[INFO] |  +- com.vaadin:vaadin-core:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:flow-server:jar:2.6.4:compile
+[INFO] |  |  |  +- com.vaadin.external.gwt:gwt-elemental:jar:2.8.2.vaadin2:compile
+[INFO] |  |  |  +- commons-fileupload:commons-fileupload:jar:1.3.3:compile
+[INFO] |  |  |  +- com.helger:ph-css:jar:6.1.1:compile
+[INFO] |  |  |  +- com.helger:ph-commons:jar:9.1.2:compile
+[INFO] |  |  |  \- com.vaadin.external:gentyref:jar:1.2.0.vaadin1:compile
+[INFO] |  |  +- com.vaadin:flow-lit-template:jar:2.6.4:compile
+[INFO] |  |  +- com.vaadin:flow-push:jar:2.6.4:compile
+[INFO] |  |  |  \- com.vaadin.external.atmosphere:atmosphere-runtime:jar:2.4.30.slf4jvaadin1:compile
+[INFO] |  |  +- com.vaadin:flow-client:jar:2.6.4:compile
+[INFO] |  |  +- com.vaadin:flow-html-components:jar:2.6.4:compile
+[INFO] |  |  +- com.vaadin:flow-data:jar:2.6.4:compile
+[INFO] |  |  |  \- javax.validation:validation-api:jar:2.0.1.Final:compile
+[INFO] |  |  +- com.vaadin:flow-dnd:jar:2.6.4:compile
+[INFO] |  |  |  +- org.webjars.npm:vaadin__vaadin-mobile-drag-drop:jar:1.0.0:compile
+[INFO] |  |  |  \- org.webjars.npm:mobile-drag-drop:jar:2.3.0-rc.1:compile
+[INFO] |  |  +- com.vaadin:vaadin-lumo-theme:jar:2.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-material-theme:jar:2.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-accordion-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-avatar-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-button-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-checkbox-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-combo-box-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-custom-field-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-date-picker-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-date-time-picker-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-details-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-time-picker-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-select-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-dialog-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-form-layout-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-grid-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-icons-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-iron-list-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-list-box-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-login-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-ordered-layout-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-progress-bar-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-radio-button-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-split-layout-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-tabs-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-text-field-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-upload-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-notification-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-app-layout-flow:jar:14.6.4:compile
+[INFO] |  |  +- com.vaadin:vaadin-context-menu-flow:jar:14.6.4:compile
+[INFO] |  |  \- com.vaadin:vaadin-menu-bar-flow:jar:14.6.4:compile
+[INFO] |  +- com.vaadin:vaadin-board-flow:jar:14.6.4:compile
+[INFO] |  +- com.vaadin:vaadin-charts-flow:jar:14.6.4:compile
+[INFO] |  |  \- com.fasterxml.jackson.core:jackson-databind:jar:2.11.4:compile
+[INFO] |  |     +- com.fasterxml.jackson.core:jackson-annotations:jar:2.11.4:compile
+[INFO] |  |     \- com.fasterxml.jackson.core:jackson-core:jar:2.11.4:compile
+[INFO] |  +- com.vaadin:vaadin-confirm-dialog-flow:jar:14.6.4:compile
+[INFO] |  +- com.vaadin:vaadin-cookie-consent-flow:jar:14.6.4:compile
+[INFO] |  +- com.vaadin:vaadin-crud-flow:jar:14.6.4:compile
+[INFO] |  +- com.vaadin:vaadin-grid-pro-flow:jar:14.6.4:compile
+[INFO] |  \- com.vaadin:vaadin-rich-text-editor-flow:jar:14.6.4:compile
+[INFO] +- com.vaadin:vaadin-spring-boot-starter:jar:14.6.4:compile
+[INFO] |  +- com.vaadin:vaadin-spring:jar:12.4.0:compile
+[INFO] |  |  +- org.springframework:spring-webmvc:jar:5.3.6:compile
+[INFO] |  |  |  \- org.springframework:spring-expression:jar:5.3.6:compile
+[INFO] |  |  \- org.springframework:spring-websocket:jar:5.3.6:compile
+[INFO] |  \- org.springframework.boot:spring-boot-starter-web:jar:2.4.5:compile
+[INFO] |     +- org.springframework.boot:spring-boot-starter-json:jar:2.4.5:compile
+[INFO] |     |  +- com.fasterxml.jackson.datatype:jackson-datatype-jdk8:jar:2.11.4:compile
+[INFO] |     |  +- com.fasterxml.jackson.datatype:jackson-datatype-jsr310:jar:2.11.4:compile
+[INFO] |     |  \- com.fasterxml.jackson.module:jackson-module-parameter-names:jar:2.11.4:compile
+[INFO] |     \- org.springframework.boot:spring-boot-starter-tomcat:jar:2.4.5:compile
+[INFO] |        +- org.apache.tomcat.embed:tomcat-embed-core:jar:9.0.45:compile
+[INFO] |        \- org.apache.tomcat.embed:tomcat-embed-websocket:jar:9.0.45:compile
+[INFO] +- org.vaadin.artur:a-vaadin-helper:jar:1.6.2:compile
+[INFO] |  \- org.vaadin.artur:spring-data-provider:jar:2.1.0:compile
+[INFO] +- org.vaadin.artur.exampledata:exampledata:jar:3.4.0:compile
+[INFO] |  +- commons-io:commons-io:jar:2.8.0:compile
+[INFO] |  \- org.springframework:spring-web:jar:5.3.6:compile
+[INFO] |     \- org.springframework:spring-beans:jar:5.3.6:compile
+[INFO] +- com.h2database:h2:jar:1.4.200:compile
+[INFO] +- org.springframework.boot:spring-boot-starter-data-jpa:jar:2.4.5:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-aop:jar:2.4.5:compile
+[INFO] |  |  +- org.springframework:spring-aop:jar:5.3.6:compile
+[INFO] |  |  \- org.aspectj:aspectjweaver:jar:1.9.6:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter-jdbc:jar:2.4.5:compile
+[INFO] |  |  +- com.zaxxer:HikariCP:jar:3.4.5:compile
+[INFO] |  |  \- org.springframework:spring-jdbc:jar:5.3.6:compile
+[INFO] |  +- jakarta.transaction:jakarta.transaction-api:jar:1.3.3:compile
+[INFO] |  +- jakarta.persistence:jakarta.persistence-api:jar:2.2.3:compile
+[INFO] |  +- org.hibernate:hibernate-core:jar:5.4.30.Final:compile
+[INFO] |  |  +- org.jboss.logging:jboss-logging:jar:3.4.1.Final:compile
+[INFO] |  |  +- org.javassist:javassist:jar:3.27.0-GA:compile
+[INFO] |  |  +- net.bytebuddy:byte-buddy:jar:1.10.22:compile
+[INFO] |  |  +- antlr:antlr:jar:2.7.7:compile
+[INFO] |  |  +- org.jboss:jandex:jar:2.2.3.Final:compile
+[INFO] |  |  +- com.fasterxml:classmate:jar:1.5.1:compile
+[INFO] |  |  +- org.dom4j:dom4j:jar:2.1.3:compile
+[INFO] |  |  +- org.hibernate.common:hibernate-commons-annotations:jar:5.1.2.Final:compile
+[INFO] |  |  \- org.glassfish.jaxb:jaxb-runtime:jar:2.3.4:compile
+[INFO] |  |     +- org.glassfish.jaxb:txw2:jar:2.3.4:compile
+[INFO] |  |     +- com.sun.istack:istack-commons-runtime:jar:3.0.12:compile
+[INFO] |  |     \- com.sun.activation:jakarta.activation:jar:1.2.2:compile
+[INFO] |  +- org.springframework.data:spring-data-jpa:jar:2.4.8:compile
+[INFO] |  |  +- org.springframework.data:spring-data-commons:jar:2.4.8:compile
+[INFO] |  |  +- org.springframework:spring-orm:jar:5.3.6:compile
+[INFO] |  |  +- org.springframework:spring-context:jar:5.3.6:compile
+[INFO] |  |  \- org.springframework:spring-tx:jar:5.3.6:compile
+[INFO] |  \- org.springframework:spring-aspects:jar:5.3.6:compile
+[INFO] +- org.springframework.boot:spring-boot-starter-validation:jar:2.4.5:compile
+[INFO] |  +- org.springframework.boot:spring-boot-starter:jar:2.4.5:compile
+[INFO] |  |  +- org.springframework.boot:spring-boot-starter-logging:jar:2.4.5:compile
+[INFO] |  |  |  +- ch.qos.logback:logback-classic:jar:1.2.3:compile
+[INFO] |  |  |  |  \- ch.qos.logback:logback-core:jar:1.2.3:compile
+[INFO] |  |  |  +- org.apache.logging.log4j:log4j-to-slf4j:jar:2.13.3:compile
+[INFO] |  |  |  |  \- org.apache.logging.log4j:log4j-api:jar:2.13.3:compile
+[INFO] |  |  |  \- org.slf4j:jul-to-slf4j:jar:1.7.30:compile
+[INFO] |  |  \- org.yaml:snakeyaml:jar:1.27:compile
+[INFO] |  +- org.glassfish:jakarta.el:jar:3.0.3:compile
+[INFO] |  \- org.hibernate.validator:hibernate-validator:jar:6.1.7.Final:compile
+[INFO] |     \- jakarta.validation:jakarta.validation-api:jar:2.0.2:compile
+[INFO] +- org.springframework.boot:spring-boot-devtools:jar:2.4.5:compile
+[INFO] |  +- org.springframework.boot:spring-boot:jar:2.4.5:compile
+[INFO] |  \- org.springframework.boot:spring-boot-autoconfigure:jar:2.4.5:compile
+[INFO] +- com.example:web:jar:0.0.1-SNAPSHOT:compile
+[INFO] |  +- io.quarkus:quarkus-rest-client:jar:1.13.6.Final:compile
+[INFO] |  |  +- io.quarkus:quarkus-resteasy-common:jar:1.13.6.Final:compile
+[INFO] |  |  |  \- org.jboss.resteasy:resteasy-core:jar:4.5.12.Final:compile
+[INFO] |  |  |     \- com.ibm.async:asyncutil:jar:0.1.0:compile
+[INFO] |  |  +- org.jboss.resteasy:resteasy-client-microprofile:jar:4.5.12.Final:compile
+[INFO] |  |  |  \- org.eclipse.microprofile.rest.client:microprofile-rest-client-api:jar:1.4.1:compile
+[INFO] |  |  +- jakarta.interceptor:jakarta.interceptor-api:jar:1.2.5:compile
+[INFO] |  |  +- org.apache.httpcomponents:httpasyncclient:jar:4.1.4:compile
+[INFO] |  |  |  \- org.apache.httpcomponents:httpcore-nio:jar:4.4.14:compile
+[INFO] |  |  \- org.jboss.logging:commons-logging-jboss-logging:jar:1.0.0.Final:compile
+[INFO] |  +- io.quarkus:quarkus-resteasy-jackson:jar:1.13.6.Final:compile
+[INFO] |  |  +- io.quarkus:quarkus-jackson:jar:1.13.6.Final:compile
+[INFO] |  |  +- org.jboss.resteasy:resteasy-jackson2-provider:jar:4.5.12.Final:compile
+[INFO] |  |  |  +- com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:jar:2.11.4:compile
+[INFO] |  |  |  |  +- com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:jar:2.11.4:compile
+[INFO] |  |  |  |  \- com.fasterxml.jackson.module:jackson-module-jaxb-annotations:jar:2.11.4:compile
+[INFO] |  |  |  \- com.github.java-json-tools:json-patch:jar:1.13:compile
+[INFO] |  |  |     +- com.github.java-json-tools:msg-simple:jar:1.2:compile
+[INFO] |  |  |     |  \- com.github.java-json-tools:btf:jar:1.3:compile
+[INFO] |  |  |     \- com.github.java-json-tools:jackson-coreutils:jar:2.0:compile
+[INFO] |  |  \- org.jboss.spec.javax.xml.bind:jboss-jaxb-api_2.3_spec:jar:2.0.0.Final:compile
+[INFO] |  +- io.quarkus:quarkus-resteasy:jar:1.13.6.Final:compile
+[INFO] |  |  +- io.quarkus:quarkus-vertx-http:jar:1.13.6.Final:compile
+[INFO] |  |  |  +- io.quarkus:quarkus-security-runtime-spi:jar:1.13.6.Final:compile
+[INFO] |  |  |  +- io.quarkus:quarkus-vertx-http-dev-console-runtime-spi:jar:1.13.6.Final:compile
+[INFO] |  |  |  +- io.quarkus.security:quarkus-security:jar:1.1.4.Final:compile
+[INFO] |  |  |  +- io.quarkus:quarkus-vertx-core:jar:1.13.6.Final:compile
+[INFO] |  |  |  \- io.vertx:vertx-web:jar:3.9.6:compile
+[INFO] |  |  |     +- io.vertx:vertx-web-common:jar:3.9.6:compile
+[INFO] |  |  |     +- io.vertx:vertx-auth-common:jar:3.9.6:compile
+[INFO] |  |  |     \- io.vertx:vertx-bridge-common:jar:3.9.6:compile
+[INFO] |  |  \- io.quarkus:quarkus-resteasy-server-common:jar:1.13.6.Final:compile
+[INFO] |  +- io.quarkus:quarkus-resteasy-mutiny:jar:1.13.6.Final:compile
+[INFO] |  |  +- io.quarkus:quarkus-resteasy-mutiny-common:jar:1.13.6.Final:compile
+[INFO] |  |  \- org.jboss.resteasy:resteasy-client:jar:4.5.12.Final:compile
+[INFO] |  |     +- org.jboss.resteasy:resteasy-client-api:jar:4.5.12.Final:compile
+[INFO] |  |     \- org.jboss.resteasy:resteasy-core-spi:jar:4.5.12.Final:compile
+[INFO] |  +- io.quarkus:quarkus-openshift:jar:1.13.6.Final:compile
+[INFO] |  |  +- io.quarkus:quarkus-kubernetes-client-internal:jar:1.13.6.Final:compile
+[INFO] |  |  +- io.quarkus:quarkus-container-image-openshift:jar:1.13.6.Final:compile
+[INFO] |  |  |  \- io.quarkus:quarkus-container-image:jar:1.13.6.Final:compile
+[INFO] |  |  \- io.quarkus:quarkus-kubernetes:jar:1.13.6.Final:compile
+[INFO] |  +- io.quarkus:quarkus-arc:jar:1.13.6.Final:compile
+[INFO] |  |  +- io.quarkus.arc:arc:jar:1.13.6.Final:compile
+[INFO] |  |  \- org.eclipse.microprofile.context-propagation:microprofile-context-propagation-api:jar:1.0.1:compile
+[INFO] |  +- io.quarkus:quarkus-smallrye-opentracing:jar:1.13.6.Final:compile
+[INFO] |  |  +- org.eclipse.microprofile.config:microprofile-config-api:jar:1.4:compile
+[INFO] |  |  +- org.eclipse.microprofile.opentracing:microprofile-opentracing-api:jar:1.3.3:compile
+[INFO] |  |  +- io.smallrye:smallrye-opentracing:jar:1.3.5:compile
+[INFO] |  |  |  +- io.opentracing:opentracing-api:jar:0.31.0:compile
+[INFO] |  |  |  +- io.opentracing.contrib:opentracing-jaxrs2:jar:0.4.1:compile
+[INFO] |  |  |  |  +- io.opentracing:opentracing-noop:jar:0.31.0:compile
+[INFO] |  |  |  |  +- io.opentracing.contrib:opentracing-web-servlet-filter:jar:0.2.3:compile
+[INFO] |  |  |  |  \- io.opentracing.contrib:opentracing-concurrent:jar:0.2.0:compile
+[INFO] |  |  |  \- io.opentracing.contrib:opentracing-interceptors:jar:0.0.4:compile
+[INFO] |  |  |     \- io.opentracing.contrib:opentracing-tracerresolver:jar:0.1.8:runtime
+[INFO] |  |  +- org.jboss.spec.javax.ws.rs:jboss-jaxrs-api_2.1_spec:jar:2.0.1.Final:compile
+[INFO] |  |  +- io.smallrye:smallrye-fault-tolerance-tracing-propagation:jar:4.3.2:compile
+[INFO] |  |  +- jakarta.inject:jakarta.inject-api:jar:1.0:compile
+[INFO] |  |  +- io.quarkus:quarkus-jaeger:jar:1.13.6.Final:compile
+[INFO] |  |  |  +- io.jaegertracing:jaeger-core:jar:0.34.3:compile
+[INFO] |  |  |  |  \- io.opentracing:opentracing-util:jar:0.31.0:compile
+[INFO] |  |  |  \- io.jaegertracing:jaeger-thrift:jar:0.34.3:compile
+[INFO] |  |  |     \- org.apache.thrift:libthrift:jar:0.13.0:compile
+[INFO] |  |  +- io.quarkus:quarkus-jsonp:jar:1.13.6.Final:compile
+[INFO] |  |  |  \- org.glassfish:jakarta.json:jar:1.1.6:compile
+[INFO] |  |  \- jakarta.servlet:jakarta.servlet-api:jar:4.0.4:compile
+[INFO] |  +- io.quarkus:quarkus-smallrye-openapi:jar:1.13.6.Final:compile
+[INFO] |  |  +- io.smallrye:smallrye-open-api-core:jar:2.0.26:compile
+[INFO] |  |  |  +- org.eclipse.microprofile.openapi:microprofile-openapi-api:jar:1.1.3-RC1:compile
+[INFO] |  |  |  \- com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:jar:2.11.4:compile
+[INFO] |  |  \- io.quarkus:quarkus-swagger-ui:jar:1.13.6.Final:compile
+[INFO] |  +- io.quarkus:quarkus-smallrye-fault-tolerance:jar:1.13.6.Final:compile
+[INFO] |  |  +- io.smallrye:smallrye-fault-tolerance:jar:4.3.2:compile
+[INFO] |  |  |  +- org.eclipse.microprofile.fault-tolerance:microprofile-fault-tolerance-api:jar:2.1.1:compile
+[INFO] |  |  |  +- io.smallrye:smallrye-fault-tolerance-api:jar:4.3.2:compile
+[INFO] |  |  |  +- io.smallrye:smallrye-fault-tolerance-core:jar:4.3.2:compile
+[INFO] |  |  |  +- jakarta.enterprise.concurrent:jakarta.enterprise.concurrent-api:jar:1.1.2:compile
+[INFO] |  |  |  \- io.smallrye:smallrye-metrics-api:jar:2.4.6:compile
+[INFO] |  |  +- jakarta.enterprise:jakarta.enterprise.cdi-api:jar:2.0.2:compile
+[INFO] |  |  |  \- jakarta.el:jakarta.el-api:jar:3.0.3:compile
+[INFO] |  |  +- io.quarkus:quarkus-smallrye-context-propagation:jar:1.13.6.Final:compile
+[INFO] |  |  |  \- io.smallrye:smallrye-context-propagation:jar:1.1.0:compile
+[INFO] |  |  |     +- io.smallrye:smallrye-context-propagation-api:jar:1.1.0:compile
+[INFO] |  |  |     \- io.smallrye:smallrye-context-propagation-storage:jar:1.1.0:compile
+[INFO] |  |  \- io.smallrye:smallrye-fault-tolerance-context-propagation:jar:4.3.2:compile
+[INFO] |  +- io.quarkus:quarkus-smallrye-health:jar:1.13.6.Final:compile
+[INFO] |  |  +- io.smallrye:smallrye-health:jar:2.2.6:compile
+[INFO] |  |  |  +- org.eclipse.microprofile.health:microprofile-health-api:jar:2.2:compile
+[INFO] |  |  |  \- io.smallrye:smallrye-health-api:jar:2.2.6:compile
+[INFO] |  |  \- io.smallrye:smallrye-health-provided-checks:jar:2.2.6:compile
+[INFO] |  \- io.quarkus:quarkus-smallrye-metrics:jar:1.13.6.Final:compile
+[INFO] |     +- io.smallrye:smallrye-metrics:jar:2.4.6:compile
+[INFO] |     \- org.eclipse.microprofile.metrics:microprofile-metrics-api:jar:2.3:compile
+[INFO] +- org.springframework.boot:spring-boot-starter-test:jar:2.4.5:test
+[INFO] |  +- org.springframework.boot:spring-boot-test:jar:2.4.5:test
+[INFO] |  +- org.springframework.boot:spring-boot-test-autoconfigure:jar:2.4.5:test
+[INFO] |  +- com.jayway.jsonpath:json-path:jar:2.4.0:test
+[INFO] |  |  \- net.minidev:json-smart:jar:2.3:test
+[INFO] |  |     \- net.minidev:accessors-smart:jar:1.2:test
+[INFO] |  |        \- org.ow2.asm:asm:jar:9.1:test
+[INFO] |  +- jakarta.xml.bind:jakarta.xml.bind-api:jar:2.3.3:compile
+[INFO] |  |  \- jakarta.activation:jakarta.activation-api:jar:1.2.2:compile
+[INFO] |  +- org.assertj:assertj-core:jar:3.18.1:test
+[INFO] |  +- org.hamcrest:hamcrest:jar:2.2:test
+[INFO] |  +- org.junit.jupiter:junit-jupiter:jar:5.7.1:test
+[INFO] |  |  +- org.junit.jupiter:junit-jupiter-api:jar:5.7.1:test
+[INFO] |  |  +- org.junit.jupiter:junit-jupiter-params:jar:5.7.1:test
+[INFO] |  |  \- org.junit.jupiter:junit-jupiter-engine:jar:5.7.1:test
+[INFO] |  +- org.mockito:mockito-core:jar:3.6.28:test
+[INFO] |  |  +- net.bytebuddy:byte-buddy-agent:jar:1.10.22:test
+[INFO] |  |  \- org.objenesis:objenesis:jar:3.1:test
+[INFO] |  +- org.mockito:mockito-junit-jupiter:jar:3.6.28:test
+[INFO] |  +- org.skyscreamer:jsonassert:jar:1.5.0:test
+[INFO] |  |  \- com.vaadin.external.google:android-json:jar:0.0.20131108.vaadin1:test
+[INFO] |  +- org.springframework:spring-core:jar:5.3.6:compile
+[INFO] |  |  \- org.springframework:spring-jcl:jar:5.3.6:compile
+[INFO] |  +- org.springframework:spring-test:jar:5.3.6:test
+[INFO] |  \- org.xmlunit:xmlunit-core:jar:2.7.0:test
+[INFO] +- com.vaadin:vaadin-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-testbench-core:jar:6.4.0:test
+[INFO] |  |  +- commons-codec:commons-codec:jar:1.15:compile
+[INFO] |  |  +- org.seleniumhq.selenium:selenium-remote-driver:jar:3.141.59:test
+[INFO] |  |  |  +- org.seleniumhq.selenium:selenium-api:jar:3.141.59:test
+[INFO] |  |  |  +- org.apache.commons:commons-exec:jar:1.3:test
+[INFO] |  |  |  +- com.squareup.okhttp3:okhttp:jar:3.14.9:compile
+[INFO] |  |  |  \- com.squareup.okio:okio:jar:1.14.0:compile
+[INFO] |  |  +- org.seleniumhq.selenium:selenium-java:jar:3.141.59:test
+[INFO] |  |  |  +- org.seleniumhq.selenium:selenium-chrome-driver:jar:3.141.59:test
+[INFO] |  |  |  +- org.seleniumhq.selenium:selenium-edge-driver:jar:3.141.59:test
+[INFO] |  |  |  +- org.seleniumhq.selenium:selenium-firefox-driver:jar:3.141.59:test
+[INFO] |  |  |  +- org.seleniumhq.selenium:selenium-ie-driver:jar:3.141.59:test
+[INFO] |  |  |  +- org.seleniumhq.selenium:selenium-opera-driver:jar:3.141.59:test
+[INFO] |  |  |  +- org.seleniumhq.selenium:selenium-safari-driver:jar:3.141.59:test
+[INFO] |  |  |  \- org.seleniumhq.selenium:selenium-support:jar:3.141.59:test
+[INFO] |  |  +- org.easymock:easymock:jar:3.1:test
+[INFO] |  |  |  \- cglib:cglib-nodep:jar:2.2.2:test
+[INFO] |  |  +- com.vaadin:license-checker:jar:1.2.0:test
+[INFO] |  |  |  \- com.github.oshi:oshi-core:jar:5.5.0:test
+[INFO] |  |  |     +- net.java.dev.jna:jna:jar:5.3.1:test
+[INFO] |  |  |     \- net.java.dev.jna:jna-platform:jar:5.7.0:test
+[INFO] |  |  \- com.google.gwt:gwt-elemental:jar:2.8.0:test
+[INFO] |  +- com.vaadin:flow-html-components-testbench:jar:2.6.4:test
+[INFO] |  +- com.vaadin:vaadin-accordion-testbench:jar:14.6.4:test
+[INFO] |  |  +- org.webjars.bowergithub.polymer:polymer:jar:2.7.0:test
+[INFO] |  |  +- org.webjars.bowergithub.webcomponents:webcomponentsjs:jar:1.2.6:test
+[INFO] |  |  +- org.webjars.bowergithub.webcomponents:shadycss:jar:1.8.0:test
+[INFO] |  |  +- org.webjars.bowergithub.vaadin:vaadin-element-mixin:jar:2.4.2:test
+[INFO] |  |  +- org.webjars.bowergithub.vaadin:vaadin-usage-statistics:jar:2.1.0:test
+[INFO] |  |  \- org.webjars.bowergithub.vaadin:vaadin-development-mode-detector:jar:2.0.4:test
+[INFO] |  +- com.vaadin:vaadin-app-layout-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-avatar-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-board-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-button-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-charts-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-checkbox-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-combo-box-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-confirm-dialog-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-context-menu-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-cookie-consent-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-crud-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-custom-field-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-date-picker-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-date-time-picker-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-details-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-dialog-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-form-layout-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-grid-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-grid-pro-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-icons-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-iron-list-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-list-box-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-login-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-menu-bar-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-notification-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-ordered-layout-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-progress-bar-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-radio-button-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-rich-text-editor-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-select-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-split-layout-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-tabs-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-text-field-testbench:jar:14.6.4:test
+[INFO] |  +- com.vaadin:vaadin-time-picker-testbench:jar:14.6.4:test
+[INFO] |  \- com.vaadin:vaadin-upload-testbench:jar:14.6.4:test
+[INFO] +- org.junit.vintage:junit-vintage-engine:jar:5.7.1:test
+[INFO] |  +- org.apiguardian:apiguardian-api:jar:1.1.0:test
+[INFO] |  +- org.junit.platform:junit-platform-engine:jar:1.7.1:test
+[INFO] |  |  +- org.opentest4j:opentest4j:jar:1.2.0:test
+[INFO] |  |  \- org.junit.platform:junit-platform-commons:jar:1.7.1:test
+[INFO] |  \- junit:junit:jar:4.13.2:test
+[INFO] \- io.github.bonigarcia:webdrivermanager:jar:3.8.1:test
+[INFO]    +- org.slf4j:slf4j-api:jar:1.7.30:compile
+[INFO]    +- com.google.code.gson:gson:jar:2.8.6:compile
+[INFO]    +- org.apache.commons:commons-lang3:jar:3.11:compile
+[INFO]    +- org.apache.httpcomponents:httpclient:jar:4.5.13:compile
+[INFO]    |  \- org.apache.httpcomponents:httpcore:jar:4.4.14:compile
+[INFO]    +- org.rauschig:jarchivelib:jar:1.0.0:test
+[INFO]    |  \- org.apache.commons:commons-compress:jar:1.20:compile
+[INFO]    \- org.jsoup:jsoup:jar:1.11.3:compile
+
