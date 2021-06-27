@@ -1,6 +1,7 @@
 package com.example.worker.service;
 
 import com.example.mutualfund.grpc.MutualFundSearchResultGrpc;
+import com.example.worker.util.GrpcConverter;
 import com.example.worker.web.client.MutualFundApiWebClient;
 import com.example.worker.web.model.MfMetaData;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,7 +15,10 @@ import org.jboss.logging.Logger;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -90,7 +94,7 @@ public class LocalSearchService {
                     List<MutualFundSearchResultGrpc> result = new ArrayList<>();
                     try {
                         List<MfMetaData> metaDataList = objectMapper.readValue(response.toString(), new TypeReference<>() {});
-                        result = metaDataList.stream().map(this::convertToGrpcModel).collect(toList());
+                        result = metaDataList.stream().map(GrpcConverter::convertToGrpcModel).collect(toList());
                     } catch (JsonProcessingException e) {
                         log.error("Exception occurred while parsing from json", e);
                     }
@@ -104,12 +108,5 @@ public class LocalSearchService {
 
     public Uni<Integer> indexSize() {
         return redisClient.hgetall(SEARCHABLE_MF_NAME_LIST_CACHE_KEY).onItem().transform(response -> response.getKeys().size());
-    }
-
-    private MutualFundSearchResultGrpc convertToGrpcModel(MfMetaData mfMetaData) {
-        return MutualFundSearchResultGrpc.newBuilder()
-                .setSchemeCode(mfMetaData.getSchemeCode())
-                .setSchemeName(mfMetaData.getSchemeName())
-                .build();
     }
 }

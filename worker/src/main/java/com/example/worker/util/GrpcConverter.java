@@ -5,7 +5,9 @@ import com.example.common.model.MutualFundMeta;
 import com.example.common.model.NavPerDate;
 import com.example.mutualfund.grpc.MutualFundGrpc;
 import com.example.mutualfund.grpc.MutualFundMetaGrpc;
+import com.example.mutualfund.grpc.MutualFundSearchResultGrpc;
 import com.example.mutualfund.grpc.NavPerDateGrpc;
+import com.example.worker.web.model.MfMetaData;
 
 import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
@@ -36,6 +38,13 @@ public final class GrpcConverter {
                 .setDate(navPerDate.getDate().format(DateTimeFormatter.BASIC_ISO_DATE))
                 .setSchemeCode(navPerDate.getSchemeCode())
                 .setNav(navPerDate.getNav().doubleValue())
+                .build();
+    }
+
+    public static MutualFundSearchResultGrpc convertToGrpcModel(MfMetaData mfMetaData) {
+        return MutualFundSearchResultGrpc.newBuilder()
+                .setSchemeCode(mfMetaData.getSchemeCode())
+                .setSchemeName(mfMetaData.getSchemeName())
                 .build();
     }
 }
