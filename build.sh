@@ -1,22 +1,31 @@
 #!/bin/bash
 
+profile="${1:-jvm}"
+
 mvn clean install -DskipTests
 
 mvn -f ui/pom.xml vaadin:prepare-frontend
 mvn -f ui/pom.xml clean package -Pproduction spring-boot:repackage
 
-#mvn -f worker/pom.xml clean package
-mvn -f worker/pom.xml package -Pnative -Dquarkus.native.container-build=true
+mvn -f worker/pom.xml clean package
 
-#mvn -f web/pom.xml clean package
-mvn -f web/pom.xml package -Pnative -Dquarkus.native.container-build=true
+if [ "$profile" == "jvm" ]; then
+  mvn -f worker/pom.xml clean package
+  mvn -f web/pom.xml clean package
+else 
+  mvn -f worker/pom.xml package -Pnative -Dquarkus.native.container-build=true
+  mvn -f web/pom.xml package -Pnative -Dquarkus.native.container-build=true
+fi
+
 
 docker build -t sivadocker17/mf-analysis-ui ui/.
 
-#docker build -f server/src/main/docker/Dockerfile.jvm -t sivadocker17/fibonacci-server server/.
-docker build -f worker/src/main/docker/Dockerfile.native -t sivadocker17/mf-analysis-worker-native worker/.
+if [ "$profile" == "jvm" ]; then
+  docker build -f worker/src/main/docker/Dockerfile.jvm -t sivadocker17/mf-analysis-worker worker/.
+  docker build -f web/src/main/docker/Dockerfile.jvm -t sivadocker17/mf-analysis-web web/.
+else
+  docker build -f worker/src/main/docker/Dockerfile.native -t sivadocker17/mf-analysis-worker worker/.
+  docker build -f web/src/main/docker/Dockerfile.native -t sivadocker17/mf-analysis-web web/.
+fi
 
-#docker build -f server/src/main/docker/Dockerfile.jvm -t sivadocker17/fibonacci-server server/.
-docker build -f web/src/main/docker/Dockerfile.native -t sivadocker17/mf-analysis-web-native web/.
-
-docker image ls | head -3
+docker image ls | head -4

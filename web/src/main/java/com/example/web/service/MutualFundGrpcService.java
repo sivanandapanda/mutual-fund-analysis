@@ -3,7 +3,7 @@ package com.example.web.service;
 import com.example.common.model.*;
 import com.example.mutualfund.grpc.*;
 import com.example.common.model.Dashboard;
-import io.quarkus.grpc.runtime.annotations.GrpcService;
+import io.quarkus.grpc.GrpcClient;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
@@ -22,11 +22,11 @@ import static com.example.common.util.AppUtils.score;
 public class MutualFundGrpcService {
 
     @Inject
-    @GrpcService("mf-service")
+    @GrpcClient("mf-service")
     MutinyMutualFundServiceGrpc.MutinyMutualFundServiceStub mutualFundService;
 
     @Inject
-    @GrpcService("mf-search-service")
+    @GrpcClient("mf-search-service")
     MutinyMutualFundSearchServiceGrpc.MutinyMutualFundSearchServiceStub mutualFundSearchService;
 
     public Uni<List<Dashboard>> getDashBoardFrom(List<Long> schemeCodes) {

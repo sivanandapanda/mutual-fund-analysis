@@ -26,8 +26,13 @@ public class DashboardView extends Div {
         // Configure Grid
         var grid = createAndConfigureGrid();
         grid.addClassName("dashboard-grid");
-        grid.setItems(service.loadDashboard());
         add(grid);
+
+        getElement().executeJs("return window.localStorage.getItem($0)", "fav-mf-schemecodes")
+                .then(scriptResult -> {
+                    var favMfSchemeCodes = scriptResult.asString();
+                    grid.setItems(service.loadDashboard(favMfSchemeCodes));
+                });
     }
 
     public static Grid<Dashboard> createAndConfigureGrid() {

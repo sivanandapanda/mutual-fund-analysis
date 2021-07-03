@@ -2,13 +2,13 @@ package com.example.worker.grpc.resource;
 
 import com.example.mutualfund.grpc.*;
 import com.example.worker.service.MutualFundService;
+import io.quarkus.grpc.GrpcService;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
-@Singleton
+@GrpcService
 public class MutualFundGrpcResource extends MutinyMutualFundServiceGrpc.MutualFundServiceImplBase {
 
     @Inject
