@@ -1,10 +1,11 @@
 package com.example.web.service;
 
 import com.example.common.model.*;
-import com.example.mutualfund.grpc.*;
-import com.example.common.model.Dashboard;
+import com.example.mutualfund.grpc.MutualFundSearchServiceGrpc;
+import com.example.mutualfund.grpc.MutualFundServiceGrpc;
+import com.example.mutualfund.grpc.SchemeCodeGrpcRequest;
+import com.example.mutualfund.grpc.SearchGrpcRequest;
 import io.quarkus.grpc.GrpcClient;
-import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -12,102 +13,117 @@ import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import static com.example.common.util.AppUtils.getAllTags;
-import static com.example.common.util.AppUtils.score;
+import static com.example.web.service.MutualFundMutinyGrpcService.convertFromGrpcModel;
 
 @ApplicationScoped
 public class MutualFundGrpcService {
 
+    //todo add limit in number of requests
+
     @Inject
     @GrpcClient("mf-service")
-    MutinyMutualFundServiceGrpc.MutinyMutualFundServiceStub mutualFundService;
+    MutualFundServiceGrpc.MutualFundServiceFutureStub mutualFundService;
 
     @Inject
     @GrpcClient("mf-search-service")
-    MutinyMutualFundSearchServiceGrpc.MutinyMutualFundSearchServiceStub mutualFundSearchService;
+    MutualFundSearchServiceGrpc.MutualFundSearchServiceBlockingStub searchService;
+
 
     public Uni<List<Dashboard>> getDashBoardFrom(List<Long> schemeCodes) {
-        return Multi.createFrom().iterable(schemeCodes)
-                .onItem().transformToUni(schemeCode -> mutualFundService.getMutualFundStatistics(SchemeCodeGrpcRequest.newBuilder().setSchemeCode(schemeCode).build())
-                        .onItem().transform(m -> {
-                            var statistics = m.getStatisticsList().stream()
-                                    .map(s -> new NavStatistics(s.getDays(),
-                                            LocalDate.parse(s.getDate(), DateTimeFormatter.BASIC_ISO_DATE),
-                                            BigDecimal.valueOf(s.getNav()),
-                                            TenorEnum.fromValue(s.getTenorValue()),
-                                            Move.fromValue(s.getMoveValue())))
-                                    .collect(Collectors.toList());
+        var allDashboards = schemeCodes.stream()
+                .map(schemeCode -> mutualFundService.getMutualFundStatistics(SchemeCodeGrpcRequest.newBuilder().setSchemeCode(schemeCode).build()))
+                .collect(Collectors.toList());
 
-                            return new Dashboard(new MutualFundStatistics(convertFromGrpcModel(m.getMeta()), statistics, m.getPercentageIncrease()));
-                        }))
-                .merge()
-                .collect()
-                .asList()
-                .map(list -> list.stream()
-                        .sorted((d1, d2) -> d2.getMutualFundStatistics().getMutualFundMeta().getSchemeCode().compareTo(d1.getMutualFundStatistics().getMutualFundMeta().getSchemeCode()))
-                        .collect(Collectors.toList()));
+        var dashboards = allDashboards.stream().map(future -> {
+            try {
+                var m = future.get();
+                var statistics = m.getStatisticsList().stream()
+                        .map(s -> new NavStatistics(s.getDays(),
+                                LocalDate.parse(s.getDate(), DateTimeFormatter.BASIC_ISO_DATE),
+                                BigDecimal.valueOf(s.getNav()),
+                                TenorEnum.fromValue(s.getTenorValue()),
+                                Move.fromValue(s.getMoveValue())))
+                        .collect(Collectors.toList());
+
+                return new Dashboard(new MutualFundStatistics(convertFromGrpcModel(m.getMeta()), statistics, m.getPercentageIncrease()));
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }).filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        return Uni.createFrom().item(dashboards);
     }
 
     public Uni<List<SearchableMutualFund>> searchMutualFunds(String searchString) {
-        return Multi.createFrom().iterable(getAllTags(searchString))
-                .onItem()
-                .transformToMulti(tag ->
-                        mutualFundSearchService.searchForMutualFund(SearchGrpcRequest.newBuilder().setSearchString(searchString).build())
-                                .onItem().transform(m -> new SearchableMutualFund(m.getSchemeCode(), m.getSchemeName(), m.getSearchScore())))
-                .merge()
-                .collect()
-                .asList()
-                .map(list -> list.stream().sorted((s1, s2) -> s2.getSearchScore().compareTo(s1.getSearchScore())).collect(Collectors.toList()));
+        var allSearchResults = getAllTags(searchString).stream()
+                .map(s -> searchService.searchForMutualFund(SearchGrpcRequest.newBuilder().setSearchString(s).build()))
+                .map(result -> {
+
+                    List<SearchableMutualFund> searchResults = new ArrayList<>();
+
+                    while (result.hasNext()) {
+                        var m = result.next();
+                        searchResults.add(new SearchableMutualFund(m.getSchemeCode(), m.getSchemeName(), m.getSearchScore()));
+                    }
+
+                    return searchResults;
+                }).flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
+        return Uni.createFrom().item(allSearchResults);
     }
 
     public Uni<List<Dashboard>> exploreMutualFunds(String searchString, int sampleSize) {
-        var allTags = getAllTags(searchString);
-        return Multi.createFrom().iterable(allTags)
-                .onItem()
-                .transformToMulti(tag ->
-                        mutualFundSearchService.searchForMutualFund(SearchGrpcRequest.newBuilder().setSearchString(searchString).build())
-                                .onItem().transform(m -> new SearchableMutualFund(m.getSchemeCode(), m.getSchemeName(), score(m.getSchemeName(), allTags))))
-                .merge()
-                .collect()
-                .asList()
-                .map(list -> list.stream()
-                        .sorted((d1, d2) -> d2.getSearchScore().compareTo(d1.getSearchScore()))
-                        .limit(sampleSize)
-                        .collect(Collectors.toList()))
-                .onItem().transformToUni(searchResults ->
-                        Multi.createFrom().iterable(searchResults).onItem().transformToUni(searchableMutualFund ->
-                                mutualFundService.getMutualFundStatistics(SchemeCodeGrpcRequest.newBuilder().setSchemeCode(searchableMutualFund.getSchemeCode()).build())
-                                        .onItem()
-                                        .transform(m -> {
-                                            var statistics = m.getStatisticsList().stream()
-                                                    .map(ss -> new NavStatistics(ss.getDays(),
-                                                            LocalDate.parse(ss.getDate(), DateTimeFormatter.BASIC_ISO_DATE),
-                                                            BigDecimal.valueOf(ss.getNav()),
-                                                            TenorEnum.fromValue(ss.getTenorValue()),
-                                                            Move.fromValue(ss.getMoveValue())))
-                                                    .collect(Collectors.toList());
+        var allSearchResults = getAllTags(searchString).stream()
+                .map(s -> searchService.searchForMutualFund(SearchGrpcRequest.newBuilder().setSearchString(s).build()))
+                .map(result -> {
 
-                                            return new Dashboard(new MutualFundStatistics(convertFromGrpcModel(m.getMeta()), statistics, m.getPercentageIncrease()));
-                                        }))
-                                .merge()
-                                .collect()
-                                .asList()
-                                .map(list -> list.stream()
-                                        .sorted((d1, d2) -> d2.getMutualFundStatistics().getPercentageIncrease().compareTo(d1.getMutualFundStatistics().getPercentageIncrease()))
-                                        .collect(Collectors.toList()))
-                );
-    }
+                    List<SearchableMutualFund> searchResults = new ArrayList<>();
 
-    private static MutualFundMeta convertFromGrpcModel(MutualFundMetaGrpc m) {
-        var mutualFundMeta = new MutualFundMeta();
-        mutualFundMeta.setFundHouse(m.getFundHouse());
-        mutualFundMeta.setSchemeCategory(m.getSchemeCategory());
-        mutualFundMeta.setSchemeCode(m.getSchemeCode());
-        mutualFundMeta.setSchemeName(m.getSchemeName());
-        mutualFundMeta.setSchemeType(m.getSchemeType());
-        return mutualFundMeta;
+                    while (result.hasNext()) {
+                        var m = result.next();
+                        searchResults.add(new SearchableMutualFund(m.getSchemeCode(), m.getSchemeName(), m.getSearchScore()));
+                    }
+
+                    return searchResults;
+                }).flatMap(Collection::stream)
+                .sorted((d1, d2) -> d2.getSearchScore().compareTo(d1.getSearchScore()))
+                .limit(sampleSize)
+                .collect(Collectors.toList());
+
+        var exploreResults = allSearchResults.stream()
+                .map(s -> mutualFundService.getMutualFundStatistics(SchemeCodeGrpcRequest.newBuilder().setSchemeCode(s.getSchemeCode()).build()))
+                .map(future -> {
+                    try {
+                        var m = future.get();
+                        var statistics = m.getStatisticsList().stream()
+                                .map(s -> new NavStatistics(s.getDays(),
+                                        LocalDate.parse(s.getDate(), DateTimeFormatter.BASIC_ISO_DATE),
+                                        BigDecimal.valueOf(s.getNav()),
+                                        TenorEnum.fromValue(s.getTenorValue()),
+                                        Move.fromValue(s.getMoveValue())))
+                                .collect(Collectors.toList());
+
+                        return new Dashboard(new MutualFundStatistics(convertFromGrpcModel(m.getMeta()), statistics, m.getPercentageIncrease()));
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .sorted((d1, d2) -> d2.getMutualFundStatistics().getPercentageIncrease().compareTo(d1.getMutualFundStatistics().getPercentageIncrease()))
+                .collect(Collectors.toList());
+
+        return Uni.createFrom().item(exploreResults);
     }
 }

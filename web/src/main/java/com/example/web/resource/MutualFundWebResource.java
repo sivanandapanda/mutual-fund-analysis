@@ -3,6 +3,7 @@ package com.example.web.resource;
 import com.example.common.model.SearchableMutualFund;
 import com.example.common.model.Dashboard;
 import com.example.web.service.MutualFundGrpcService;
+import com.example.web.service.MutualFundMutinyGrpcService;
 import io.smallrye.mutiny.Uni;
 import org.eclipse.microprofile.metrics.annotation.Counted;
 import org.eclipse.microprofile.metrics.annotation.Timed;
